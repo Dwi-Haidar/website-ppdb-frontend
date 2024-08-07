@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// kayak menulis (typewriter)
+//dari bawah ke atas (BTT)
+//memudar faded
+//kiri ke kanan LTR
+//kanan ke kiri RTL
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 70% }
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: .15em solid orange; 
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation: typing 4s steps(40, end);
+}
+
+@keyframes BToT{
+  from {
+    opacity: 0;
+    transform:translatey(40%)
+  }
+  to {
+    opacity: 1;
+    transform:translatey(0)
+  }
+}
+
+.BTT {
+  animation: BToT 1.5s ease-out forwards;
+}
+
+@keyframes Faded{
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.faded {
+  animation: Faded 1.5s ease-out forwards;
+}
+
+
+@keyframes Left-to-right {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.LTR {
+  animation: Left-to-right 2s ease-out forwards;
+}
+
+@keyframes right-to-left {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.RTL {
+  animation: right-to-left 2s ease-out forwards;
+}
