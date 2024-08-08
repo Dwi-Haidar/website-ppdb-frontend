@@ -80,3 +80,41 @@
 .RTL {
   animation: right-to-left 2s ease-out forwards;
 }
+
+.h {
+  background-image: linear-gradient(
+    to right,
+    white,
+    black 50%,
+    white 50%
+  );
+  background-size: 200% 100%;
+  background-position: -100%;
+  display: inline-block;
+  padding: 5px 0;
+  position: relative;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease-in-out;
+  
+}
+
+.h:before{
+  content: '';
+  background: black;
+  display: block;
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  transition: all 0.3s ease-in-out;
+}
+
+.h:hover {
+ background-position: 0;
+}
+
+.h:hover::before{
+  width: 100%;
+}

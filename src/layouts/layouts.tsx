@@ -1,16 +1,29 @@
-import { Link, Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom";
+import Navbar from "../components/componentsGlobal/navbarUser";
+import Footer from "../components/componentsGlobal/footer";
 
-const layouts = () => {
+const Layouts = () => {
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === '/login';
+
   return (
-    <div>
-        <div className="flex gap-8 ">
-            <Link to="/" className="RTL">Home</Link>
-            <Link to="/about" className="LTR">About</Link>
+    <div className="overflow-x-hidden">
+      {!isLoginPage && (
+        <div className="fixed z-50 w-full">
+          <Navbar />
         </div>
-        <Outlet></Outlet>
-        <p className="BTT">footer</p>
+      )}
+      <div className={`mt-${isLoginPage ? '0' : '[100px]'}`}>
+        <Outlet />
+      </div>
+      {!isLoginPage && (
+        <div className="mt-10">
+          <Footer />
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default layouts
+export default Layouts;
