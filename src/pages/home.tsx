@@ -8,6 +8,8 @@ import Pmr from "../assets/image/pmr.jpeg"
 import Pramuk from "../assets/image/Pramuka.jpeg"
 import takewnd from "../assets/image/tkdn.jpeg"
 import paskib from "../assets/image/paskibra.jpeg"
+import AboutUs from "../components/componentsHome/AboutUs";
+import Galeri from "../components/componentsHome/galeri"
 
 const Home: React.FC = () => {
   const eskulData: EskulData[] = [
@@ -51,8 +53,14 @@ const Home: React.FC = () => {
   
 
   return (
-    <div className="faded">
+    <div className="faded mt-[15%] md:mt-[10%] lg:mt-[4%]">
       <Banner />
+      <div>
+        <AboutUs/>
+      </div>
+      <div>
+        <Galeri />
+      </div>
       <div className="flex justify-center items-center my-5">
         <p className="font-bold text-[30px]">Ekstrakurikuler</p>
       </div>

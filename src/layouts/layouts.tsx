@@ -14,7 +14,7 @@ const Layouts = () => {
           <Navbar />
         </div>
       )}
-      <div className={`mt-${isLoginPage ? '0' : '[100px]'}`}>
+      <div>
         <Outlet />
       </div>
       {!isLoginPage && (

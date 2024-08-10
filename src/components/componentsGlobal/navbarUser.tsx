@@ -30,7 +30,7 @@ const NavbarUser: React.FC = () => {
         <div className="hidden md:flex gap-8 items-center">
           <a href="/" className="hover:text-green-800">Home</a>
           <a href="/about" className="hover:text-green-800">About</a>
-          <a href="#about" className="hover:text-green-800">ppdb-online</a>
+          <a href="/ppdb-online" className="hover:text-green-800">ppdb-online</a>
           <a href="#about" className="hover:text-green-800">ppdb-offline</a>
         </div>
         <div className="md:hidden">
