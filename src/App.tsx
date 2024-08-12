@@ -5,7 +5,8 @@ import Login from "./pages/login";
 import Layouts from "./layouts/layouts";
 import PpdbOnline from "./pages/ppdbOnline";
 import LayoutsAdmin from "./layouts/layoutsAdmin";
-import Dashboard from "./pages/dashboard"
+import Dashboard from "./pages/dashboard";
+import DataPpdb from "../src/pages/ppdbData";
 
 const App = () => {
   return (
@@ -14,12 +15,13 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layouts />}>
             <Route index element={<Home />} />
-            <Route path="/About" element={<About />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/ppdb-online" element={<PpdbOnline />} />
+            <Route path="about" element={<About />} />
+            <Route path="login" element={<Login />} />
+            <Route path="ppdb-online" element={<PpdbOnline />} />
           </Route>
           <Route path="/admin" element={<LayoutsAdmin />}>
             <Route index element={<Dashboard />} />
+            <Route path="ppdb-data" element={<DataPpdb />} />
           </Route>
         </Routes>
       </BrowserRouter>

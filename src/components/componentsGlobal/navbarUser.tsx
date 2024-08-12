@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import Logo from "../../assets/image/logosekolah.png"
+
 const NavbarUser: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [scrollY, setScrollY] = useState<number>(0);
@@ -25,12 +27,14 @@ const NavbarUser: React.FC = () => {
       className={`${bgColor} ${textColor} p-4 md:px-9 lg:px-14 transition-all duration-300`}
     >
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-lg font-bold"><img src="" alt="logo" /></div>
+        <img src={Logo} alt="logo" className='w-[44px]'/>
         <div className="hidden md:flex gap-8 items-center">
           <a href="/" className="hover:text-green-800">Home</a>
           <a href="/about" className="hover:text-green-800">About</a>
           <a href="/ppdb-online" className="hover:text-green-800">ppdb-online</a>
-          <a href="#about" className="hover:text-green-800">ppdb-offline</a>
+          <a href="/about" className="hover:text-green-800">ppdb-offline</a>
+          <div>||</div>
+          <a href="/login" className="hover:text-gray-400  text-[black] font-bold">Login</a>
         </div>
         <div className="md:hidden">
           <button
