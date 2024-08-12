@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 const NavbarUser: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [scrollY, setScrollY] = useState<number>(0);
@@ -26,7 +25,7 @@ const NavbarUser: React.FC = () => {
       className={`${bgColor} ${textColor} p-4 md:px-9 lg:px-14 transition-all duration-300`}
     >
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-lg font-bold">Logo</div>
+        <div className="text-lg font-bold"><img src="" alt="logo" /></div>
         <div className="hidden md:flex gap-8 items-center">
           <a href="/" className="hover:text-green-800">Home</a>
           <a href="/about" className="hover:text-green-800">About</a>
