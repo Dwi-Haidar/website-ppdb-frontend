@@ -4,7 +4,6 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import LogoSekolah from "../../assets/image/logosekolah.png"
 import Maps from '../componentsHome/maps';
-import { Image } from '@mui/icons-material';
 
 const Footer: React.FC = () => {
   return (
