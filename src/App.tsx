@@ -13,13 +13,13 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layouts />}>
-            <Route index element={<Home/ >}/>
+            <Route index element={<Home />} />
             <Route path="/About" element={<About />} />
             <Route path="/login" element={<Login />} />
             <Route path="/ppdb-online" element={<PpdbOnline />} />
           </Route>
           <Route path="/admin" element={<LayoutsAdmin />}>
-           <Route index element={<Dashboard />} />
+            <Route index element={<Dashboard />} />
           </Route>
         </Routes>
       </BrowserRouter>
