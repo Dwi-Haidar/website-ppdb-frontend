@@ -18,6 +18,11 @@ const ppdbOnline = () => {
                 <label className="block text-sm font-medium text-gray-700">NISN</label>
                 <input type="text" placeholder="NISN" className="input-field mt-1" />
                 </div>
+
+                <div>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <input type="text" placeholder="Email" className="input-field mt-1" />
+                </div>
     
                 <div>
                 <label className="block text-sm font-medium text-gray-700">Tempat, Tanggal Lahir</label>
