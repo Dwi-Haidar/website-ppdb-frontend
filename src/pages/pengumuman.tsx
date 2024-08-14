@@ -1,11 +1,10 @@
 
-
 import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import { useState } from "react";
 
-const ppdbData = () => {
-  const ppdbDummyData = [
+const pengumuman = () => {
+    const ppdbDummyData = [
         {
           statusKeputusan: false,
           namaLengkap: "Ayu Lestari",
@@ -243,20 +242,7 @@ const ppdbData = () => {
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Lengkap</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">NISN</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Tempat, Tanggal Lahir</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[12%]">NIK</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[12%]">No. KK</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">Alamat</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Tahun Lahir Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Pendidikan Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Pekerjaan Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Tahun Lahir Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Pendidikan Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Pekerjaan Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">Alamat Orang Tua</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">No. Telepon</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -272,22 +258,7 @@ const ppdbData = () => {
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.namaLengkap}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nisn}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tempatTanggalLahir}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nik}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noKk}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.alamat}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.namaAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tahunLahirAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pendidikanAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pekerjaanAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.namaIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tahunLahirIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pendidikanIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pekerjaanIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.alamatOrangTua}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noTelepon}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
-                  <Link to="">ubah status</Link>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -310,7 +281,7 @@ const ppdbData = () => {
         activeClassName="active"
       />
     </div>
-  );
-};
+  )
+}
 
-export default ppdbData;
+export default pengumuman
