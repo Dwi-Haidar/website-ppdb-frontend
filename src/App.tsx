@@ -7,6 +7,8 @@ import PpdbOnline from "./pages/ppdbOnline";
 import LayoutsAdmin from "./layouts/layoutsAdmin";
 import Dashboard from "./pages/dashboard";
 import DataPpdb from "../src/pages/ppdbData";
+import PpdbOfline from "./pages/ppdbOfline";
+import Pengumuman from "./pages/pengumuman";
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
             <Route path="about" element={<About />} />
             <Route path="login" element={<Login />} />
             <Route path="ppdb-online" element={<PpdbOnline />} />
+            <Route path="ppdb-ofline" element={<PpdbOfline />} />
+            <Route path="pengumuman" element={<Pengumuman />} />
           </Route>
           <Route path="/admin" element={<LayoutsAdmin />}>
             <Route index element={<Dashboard />} />
