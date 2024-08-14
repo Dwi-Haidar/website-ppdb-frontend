@@ -26,11 +26,11 @@ const NavbarAdmin: FC = () => {
           ☰
         </button>
         <div className="p-4">
-          <h2 className="text-lg font-semibold">Admin</h2>
+          <h2 className="text-lg font-bold text-[black]">Admin</h2>
           <nav className="flex flex-col mt-4">
             <ul>
               <Link to="/admin">
-              ``<li className="py-2 hover:bg-green-600 rounded pl-4">
+                <li className="py-2 hover:bg-green-600 rounded pl-4">
                   <Link to="/admin">Dashboard</Link>
                 </li>
               </Link>
