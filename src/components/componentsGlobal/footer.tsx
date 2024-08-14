@@ -3,25 +3,16 @@ import { motion } from 'framer-motion';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import LogoSekolah from "../../assets/image/logosekolah.png"
-import Maps from '../componentsHome/maps';
+
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-green-700 text-white py-12">
+    <footer className="bg-green-700 text-white py-12" style={{ fontFamily: "work sans" }} >
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          
+          {/* Informasi Sekolah */}
           <div className="mb-8 md:mb-0 text-gray-100">
-            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-              <motion.h4
-                className="text-3xl font-extrabold mb-6 text-white"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                SMP Islam Karya Mukti
-
-              </motion.h4>
+            <div style={{ display: "flex", justifyContent: "center" }}>
             </div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -33,7 +24,7 @@ const Footer: React.FC = () => {
               </div>
             </motion.div>
           </div>
-          <div className="text-gray-100">
+          <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", marginLeft: "auto" }}>
             <motion.h4
               className="text-3xl font-extrabold mb-6 text-white"
               initial={{ opacity: 0, y: -20 }}
@@ -54,10 +45,10 @@ const Footer: React.FC = () => {
               <p className="flex items-center mb-3 text-gray-200">
                 <PhoneInTalkIcon className="mr-2" /> <span className="font-semibold">Telepon:</span> (0251) 1234567
               </p>
-              <p className="flex items-center text-gray-200">
+              <p className="flex items-center text-gray-200 family-sans">
                 <span className="font-semibold">Alamat:</span> Jl. Mayor Oking Jayaatmaja Citereup-Bogor
               </p>
-              <Maps />
+              {/* <Maps /> */}
             </motion.div>
           </div>
         </div>
@@ -67,7 +58,7 @@ const Footer: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <p className="text-lg">&copy; {new Date().getFullYear()} SMP Islam Karya Mukti. All rights reserved.</p>
+          <p className="text-lg " style={{ fontSize: "13px", fontFamily: "work sans" }} >&copy; {new Date().getFullYear()} SMP Islam Karya Mukti. All rights reserved.</p>
         </motion.div>
 
       </div>

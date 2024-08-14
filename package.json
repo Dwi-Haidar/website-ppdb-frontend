@@ -16,6 +16,7 @@
     "@mui/material": "^5.16.7",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@react-google-maps/api": "^2.19.3",
+    "axios": "^1.7.3",
     "framer-motion": "^11.3.24",
     "ppdb": "file:",
     "react": "^18.3.1",
@@ -24,6 +25,7 @@
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.26.0",
     "react-slick": "^0.30.2",
+    "react-toastify": "^10.0.5",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.12",
     "swiper": "^11.1.9"
