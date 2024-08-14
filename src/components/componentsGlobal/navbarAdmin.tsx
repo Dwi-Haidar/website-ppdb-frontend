@@ -1,4 +1,5 @@
 import { useState, FC } from "react";
+import { Link } from "react-router-dom";
 
 const NavbarAdmin: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -26,15 +27,20 @@ const NavbarAdmin: FC = () => {
         </button>
         <div className="p-4">
           <h2 className="text-lg font-semibold">Admin</h2>
-          <nav className="flex flex-col mt-[10%] ">
+          <nav className="flex flex-col mt-4">
             <ul>
-              <li className="py-2 hover:bg-green-600 rounded pl-[5%]">
-                <a href="admin">Dashboard</a>
-              </li>
-              <li className="py-2 hover:bg-green-600 rounded pl-[5%]">
-                <a href="#">table ppdb</a>
-              </li>
+              <Link to="/admin">
+              ``<li className="py-2 hover:bg-green-600 rounded pl-4">
+                  <Link to="/admin">Dashboard</Link>
+                </li>
+              </Link>
 
+
+              <Link  to="/admin/ppdb-data">
+                <li className="py-2 hover:bg-green-600 rounded pl-4">
+                  <Link to="/admin/ppdb-data">Table PPDB</Link>
+                </li> 
+              </Link>
             </ul>
           </nav>
         </div>
