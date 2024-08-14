@@ -9,8 +9,20 @@ import Dashboard from "./pages/dashboard";
 import DataPpdb from "../src/pages/ppdbData";
 import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
+import { useEffect } from "react";
 
 const App = () => {
+  useEffect(() => {
+    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+    const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
+    const script = document.createElement("script");
+    script.src = snapScript;
+    script.setAttribute("data-client-key", clientKey);
+    script.async = true;
+
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <div>
       <BrowserRouter>
