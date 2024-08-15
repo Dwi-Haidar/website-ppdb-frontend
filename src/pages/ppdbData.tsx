@@ -5,12 +5,12 @@ import axios from "axios";
 
 // Define type for ppdb data
 interface PpdbData {
-  statusKeputusan: boolean;
-  namaLengkap: string;
+  id: number;
+  nama: string;
   nisn: string;
-  tempatTanggalLahir: string;
+  ttl: string;
   nik: string;
-  noKk: string;
+  noKK: string;
   alamat: string;
   namaAyah: string;
   tahunLahirAyah: string;
@@ -20,8 +20,13 @@ interface PpdbData {
   tahunLahirIbu: string;
   pendidikanIbu: string;
   pekerjaanIbu: string;
-  alamatOrangTua: string;
-  noTelepon: string;
+  alamatOrtu: string;
+  noTelp: string;
+  createdAt: string;
+  updatedAt: string;
+  image: string[]; // Assuming image is an array of image URLs
+  Kelulusan?: number;
+  lulus?: boolean;
 }
 
 const PpdbDataTable: React.FC = () => {
@@ -32,8 +37,10 @@ const PpdbDataTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<PpdbData[]>('http://localhost:5000/ppdb');
-        setPpdbData(response.data);
+        const response = await axios.get<{ status: boolean; message: string; data: PpdbData[] }>(
+          'http://localhost:5000/ppdb'
+        );
+        setPpdbData(response.data.data); // Access 'data' property from the response
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -62,7 +69,8 @@ const PpdbDataTable: React.FC = () => {
         <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Status Kelulusan</th>
+            <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Kelulusan</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">Foto</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Lengkap</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">NISN</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Tempat, Tanggal Lahir</th>
@@ -79,24 +87,34 @@ const PpdbDataTable: React.FC = () => {
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Pekerjaan Ibu</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">Alamat Orang Tua</th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">No. Telepon</th>
+           
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Action</th>
             </tr>
           </thead>
           <tbody>
             {currentItems.map((data, index) => (
               <tr key={index}>
-                <td
-                  className={`py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap ${
-                    data.statusKeputusan ? "text-green-500" : "text-red-500"
-                  }`}
-                >
-                  {data.statusKeputusan ? "Lulus" : "Belum Lulus"}
+                
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
+                  {data.Kelulusan ? (
+                    data.lulus === true ? "Lulus" : "Tidak Lulus"
+                  ) : (
+                    "Belum Dikonfirmasi"
+                  )}
                 </td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.namaLengkap}</td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
+                  {data.image && data.image.length > 0 ? (
+                    <img src={data.image[0]} alt="Foto Siswa" className="w-16 h-16 object-cover rounded-full" />
+                  ) : (
+                    <span>Tidak ada foto</span>
+                  )}
+                </td>
+                
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nama}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nisn}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tempatTanggalLahir}</td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.ttl}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nik}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noKk}</td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noKK}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.alamat}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.namaAyah}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tahunLahirAyah}</td>
@@ -106,26 +124,31 @@ const PpdbDataTable: React.FC = () => {
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tahunLahirIbu}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pendidikanIbu}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pekerjaanIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.alamatOrangTua}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noTelepon}</td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.alamatOrtu}</td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noTelp}</td>
                 <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
-                  <Link to={`/edit/${data.nisn}`} className="text-blue-600 hover:text-blue-800">Edit</Link>
+                  <Link
+                    to={`edit/${data.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Konfirmasi
+                  </Link>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="pagination">
+      <div className="mt-4">
         <ReactPaginate
           pageCount={Math.ceil(ppdbData.length / itemsPerPage)}
           onPageChange={handlePageClick}
-          containerClassName="pagination"
+          containerClassName="pagination flex justify-center"
           pageClassName="page-item"
           pageLinkClassName="page-link"
           previousClassName="page-item"
-          previousLinkClassName="page-link"
           nextClassName="page-item"
+          previousLinkClassName="page-link"
           nextLinkClassName="page-link"
           breakClassName="page-item"
           breakLinkClassName="page-link"
