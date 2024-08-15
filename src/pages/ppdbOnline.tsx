@@ -141,7 +141,6 @@ const PpdbOnline = () => {
             { label: "Nama", name: "nama", type: "text" },
             { label: "Email", name: "email", type: "email" },
             { label: "NISN", name: "nisn", type: "text" },
-            { label: "Email", name: "email", type: "text" },
             { label: "Tempat, Tanggal Lahir", name: "ttl", type: "date" },
             { label: "NIK", name: "nik", type: "text" },
             { label: "No KK", name: "noKK", type: "text" },
