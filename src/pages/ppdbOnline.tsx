@@ -1,8 +1,7 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 
 interface FormData {
   nama: string;
@@ -94,7 +93,7 @@ const PpdbOnline = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/ppdb", data, {
+      const response = await axios.post("http://localhost:5001/ppdb", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
