@@ -11,6 +11,7 @@ import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
 import { useEffect } from "react";
 
+import DataPpdbEdit from "./pages/editKelulusan";
 const App = () => {
   useEffect(() => {
     const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/admin" element={<LayoutsAdmin />}>
             <Route index element={<Dashboard />} />
             <Route path="ppdb-data" element={<DataPpdb />} />
+            <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />
           </Route>
         </Routes>
       </BrowserRouter>

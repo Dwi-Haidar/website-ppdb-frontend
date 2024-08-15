@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -139,6 +139,7 @@ const PpdbOnline = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { label: "Nama", name: "nama", type: "text" },
+            { label: "Email", name: "email", type: "email" },
             { label: "NISN", name: "nisn", type: "text" },
             { label: "Email", name: "email", type: "text" },
             { label: "Tempat, Tanggal Lahir", name: "ttl", type: "date" },
