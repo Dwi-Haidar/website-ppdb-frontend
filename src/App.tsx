@@ -9,7 +9,7 @@ import Dashboard from "./pages/dashboard";
 import DataPpdb from "../src/pages/ppdbData";
 import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
-
+import DataPpdbEdit from "./pages/editKelulusan"; 
 const App = () => {
   return (
     <div>
@@ -26,6 +26,7 @@ const App = () => {
           <Route path="/admin" element={<LayoutsAdmin />}>
             <Route index element={<Dashboard />} />
             <Route path="ppdb-data" element={<DataPpdb />} />
+            <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />
           </Route>
         </Routes>
       </BrowserRouter>

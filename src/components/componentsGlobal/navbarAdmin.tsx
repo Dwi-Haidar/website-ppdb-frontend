@@ -1,5 +1,6 @@
 import { useState, FC } from "react";
 import { Link } from "react-router-dom";
+import logo from "../../assets/image/logosekolah.png"
 
 const NavbarAdmin: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -26,7 +27,10 @@ const NavbarAdmin: FC = () => {
           ☰
         </button>
         <div className="p-4">
-          <h2 className="text-lg font-bold text-[black]">Admin</h2>
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="" className="w-[40px]"/>
+            <h2 className="text-[10px] font-bold ">SMPN ISLAM KARYA MUKTI</h2>
+          </div>
           <nav className="flex flex-col mt-4">
             <ul>
               <Link to="/admin">
