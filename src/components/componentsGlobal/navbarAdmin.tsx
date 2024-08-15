@@ -13,7 +13,7 @@ const NavbarAdmin: FC = () => {
         ☰
       </button>
 
-      {/* Sidebar */}
+      
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-green-500 text-white transform h-[100vh] ${
           isOpen ? "translate-x-0" : "-translate-x-full"
