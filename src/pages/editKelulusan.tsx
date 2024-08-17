@@ -19,18 +19,19 @@ interface Data {
   pekerjaanIbu: string;
   alamatOrtu: string;
   noTelp: string;
+  status?: string; // Menambahkan status pada tipe Data
 }
 
 const EditKelulusan: React.FC = () => {
   const [data, setData] = useState<Data | null>(null);
-  const [kelulusan, setKelulusan] = useState<boolean>(false);
+  const [kelulusan, setKelulusan] = useState<string>(''); // Menggunakan string untuk menyimpan status
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/ppdb/1');
         setData(response.data.data); // Mengambil data dari response.data.data
-        setKelulusan(response.data.data.status === 'Lulus'); // Misalnya status disimpan di data
+        setKelulusan(response.data.data.status || ''); // Mengatur status berdasarkan data
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -39,8 +40,8 @@ const EditKelulusan: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setKelulusan(event.target.checked);
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setKelulusan(event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -48,13 +49,15 @@ const EditKelulusan: React.FC = () => {
     try {
       await axios.put('http://localhost:5000/ppdb/1', {
         ...data,
-        status: kelulusan ? 'Lulus' : 'Tidak Lulus',
+        status: kelulusan,
       });
+      console.log('Data berhasil dikirim!',data);
       alert('Status kelulusan berhasil diperbarui!');
     } catch (error) {
       console.error('Error updating status:', error);
     }
   };
+  
 
   return (
     <div className="container mx-auto p-6">
@@ -134,24 +137,29 @@ const EditKelulusan: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center mb-2">
-                <input
-                  type="radio"
-                  id="lulus"
-                  name='kelulusan'
-                  
-                  className="mr-2"
-                />
-                <label htmlFor="lulus" className="font-semibold">Lulus</label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  id="tidaklulus"
-                   name='kelulusan'
-                  className="mr-2"
-                />
-                <label htmlFor="tidaklulus" className="font-semibold">Tidak Lulus</label>
-              </div>
+              <input
+                type="radio"
+                id="lulus"
+                name="kelulusan"
+                value="Lulus"
+                checked={kelulusan === 'Lulus'}
+                onChange={handleRadioChange}
+                className="mr-2"
+              />
+              <label htmlFor="lulus" className="font-semibold">Lulus</label>
+            </div>
+            <div className="flex items-center mb-2">
+              <input
+                type="radio"
+                id="tidaklulus"
+                name="kelulusan"
+                value="Tidak Lulus"
+                checked={kelulusan === 'Tidak Lulus'}
+                onChange={handleRadioChange}
+                className="mr-2"
+              />
+              <label htmlFor="tidaklulus" className="font-semibold">Tidak Lulus</label>
+            </div>
           </div>
           <div className='flex w-full justify-end'>
             <button
@@ -161,7 +169,6 @@ const EditKelulusan: React.FC = () => {
               Simpan
             </button>
           </div>
-          
         </form>
       ) : (
         <p className="text-gray-500">Loading...</p>
