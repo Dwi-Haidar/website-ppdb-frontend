@@ -2,7 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-interface Data {
+interface Kelulusan {
+  id: number;
+  createdAt: string;
+  ppdbId: number;
+  statusKelulusan: boolean;
+  updatedAt: string;
+}
+
+interface PpdbData {
   id: number;
   nama: string;
   nisn: string;
@@ -10,6 +18,7 @@ interface Data {
   nik: string;
   noKK: string;
   alamat: string;
+  alamatOrtu: string;
   namaAyah: string;
   tahunLahirAyah: string;
   pendidikanAyah: string;
@@ -18,13 +27,16 @@ interface Data {
   tahunLahirIbu: string;
   pendidikanIbu: string;
   pekerjaanIbu: string;
-  alamatOrtu: string;
   noTelp: string;
-  status?: boolean;
+  isPaid: boolean;
+  createdAt: string;
+  updatedAt: string;
+  image: string[]; // Assuming image is an array of image URLs
+  Kelulusan?: Kelulusan; // Optional to handle cases where it's not present
 }
 
 const EditKelulusan: React.FC = () => {
-  const [data, setData] = useState<Data | null>(null);
+  const [data, setData] = useState<PpdbData | null>(null);
   const [kelulusan, setKelulusan] = useState<boolean>(false);
   const { id } = useParams<{ id: string }>(); // Mengambil id dari URL params
   const numericId = id ? Number(id) : 0; // Konversi id ke number
@@ -35,7 +47,8 @@ const EditKelulusan: React.FC = () => {
         const response = await axios.get(`http://localhost:5000/ppdb/${numericId}`);
         if (response.data && response.data.data) {
           setData(response.data.data);
-          setKelulusan(response.data.data.status ?? false);
+          // Sesuaikan pengaturan kelulusan dengan status dari response
+          setKelulusan(response.data.data.Kelulusan?.statusKelulusan ?? false);
         } else {
           console.error('Data tidak ditemukan');
         }
@@ -174,18 +187,11 @@ const EditKelulusan: React.FC = () => {
               />
               <label htmlFor="tidaklulus" className="font-semibold">Tidak Lulus</label>
             </div>
-          </div>
-          <div className='flex w-full justify-end'>
-            <button
-              type="submit"
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              Simpan
-            </button>
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
           </div>
         </form>
       ) : (
-        <p>Loading...</p>
+        <p>Loading data...</p>
       )}
     </div>
   );

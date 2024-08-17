@@ -3,39 +3,61 @@ import ReactPaginate from "react-paginate";
 import axios from "axios";
 
 // Tipe data untuk PPDB
-interface PPDBData {
+interface PpdbData {
   id: number;
-  statusKelulusan: boolean;
-  ppdb: {
-    nama: string;
-    nisn: string;
-    ttl: string;
-    alamat: string;
+  nama: string;
+  nisn: string;
+  ttl: string;
+  nik: string;
+  noKK: string;
+  alamat: string;
+  alamatOrtu: string;
+  namaAyah: string;
+  tahunLahirAyah: string;
+  pendidikanAyah: string;
+  pekerjaanAyah: string;
+  namaIbu: string;
+  tahunLahirIbu: string;
+  pendidikanIbu: string;
+  pekerjaanIbu: string;
+  noTelp: string;
+  isPaid: boolean;
+  createdAt: string;
+  updatedAt: string;
+  image: string[]; // Assuming image is an array of image URLs
+  Kelulusan?: { // Optional to handle cases where it's not present
+    id: number;
+    createdAt: string;
+    ppdbId: number;
+    statusKelulusan: boolean;
+    updatedAt: string;
   };
 }
 
 const Pengumuman: React.FC = () => {
-  const [data, setData] = useState<PPDBData[]>([]);
+  const [ppdbData, setPpdbData] = useState<PpdbData[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [totalItems, setTotalItems] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 5;
-
+console.log(ppdbData);
   useEffect(() => {
-    // Fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/kelulusan");
-        setData(response.data); // Assumes the API returns an array of PPDBData
-        setTotalItems(response.data.length); // Total items for pagination
+        const response = await axios.get<{ status: boolean; message: string; data: PpdbData[] }>(
+          'http://localhost:5000/ppdb'
+        );
+        setPpdbData(response.data.data); // Access 'data' property from the response
+        setError(null); // Clear any previous error
       } catch (error) {
-        console.error("Error fetching data:", error);
+        setError('Error fetching data. Please try again later.');
+        console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
   }, []);
 
-  const currentItems = data.slice(
+  const currentItems = ppdbData.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
@@ -46,52 +68,78 @@ const Pengumuman: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center mt-20">
+      {error && <div className="text-red-500 mb-4">{error}</div>}
       <div className="overflow-x-auto w-[70%] mb-4">
         <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Status Kelulusan</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Lengkap</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">NISN</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Tempat, Tanggal Lahir</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">Alamat</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Foto</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Lengkap</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">NISN</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tempat, Tanggal Lahir</th>
+             
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Alamat</th>
+
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ayah</th>
+
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ibu</th>
+
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Kelulusan</th>
+              
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((item) => (
-              <tr key={item.id}>
-                <td
-                  className={`py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap ${item.statusKelulusan ? "text-green-500" : "text-red-500"}`}
-                >
-                  {item.statusKelulusan ? "Lulus" : "Belum Lulus"}
+            {currentItems.length > 0 ? (
+              currentItems.map((data) => (
+                <tr key={data.id}>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.image.length > 0 ? (
+                      <img src={data.image[0]} alt="Foto Siswa" className="w-16 h-16 object-cover rounded-full" />
+                    ) : (
+                      <span>Tidak ada foto</span>
+                    )}
+                  </td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nama}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nisn}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.ttl}</td>
+        
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.alamat}</td>
+
+                 
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pekerjaanAyah}</td>
+                 
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.noTelp}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.Kelulusan?.statusKelulusan ? "Lulus" : "Tidak Lulus"}
+                  </td>
+                 
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={18} className="py-3 px-4 border-b text-sm text-gray-700 text-center">
+                  Tidak ada data
                 </td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.nama}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.nisn}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.ttl}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.alamat}</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
       <ReactPaginate
-        pageCount={Math.ceil(totalItems / itemsPerPage)}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
+        pageCount={Math.ceil(ppdbData.length / itemsPerPage)}
         onPageChange={handlePageClick}
-        containerClassName="pagination"
+        containerClassName="pagination flex justify-center"
         pageClassName="page-item"
-        pageLinkClassName="page-link"
-        previousClassName="page-item"
-        previousLinkClassName="page-link"
-        nextClassName="page-item"
-        nextLinkClassName="page-link"
-        breakClassName="page-item"
-        breakLinkClassName="page-link"
+        pageLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
         activeClassName="active"
+        activeLinkClassName="bg-blue-500 text-white"
+        previousClassName="previous-page"
+        nextClassName="next-page"
+        previousLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+        nextLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
       />
     </div>
   );
-}
+};
 
 export default Pengumuman;
