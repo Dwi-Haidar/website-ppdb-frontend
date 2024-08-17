@@ -62,7 +62,7 @@ const Login: React.FC = () => {
               id="username"
               type="text"
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-              placeholder="you@example.com"
+              placeholder="your username"
               value={username}
               onChange={handleUsernameChange}
               required
