@@ -10,6 +10,7 @@ import DataPpdb from "./pages/ppdbData";
 import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
 import DataPpdbEdit from "./pages/editKelulusan"; 
+import { useEffect } from "react";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem('authToken');
@@ -18,6 +19,19 @@ const App = () => {
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
 
+
+const App = () => {
+  useEffect(() => {
+    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+    const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
+    const script = document.createElement("script");
+    script.src = snapScript;
+    script.setAttribute("data-client-key", clientKey);
+    script.async = true;
+
+    document.body.appendChild(script);
+  }, []);
+}
   return (
     <div>
       <BrowserRouter>
