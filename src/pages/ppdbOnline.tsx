@@ -102,7 +102,6 @@ const PpdbOnline = () => {
       if (response.data.status) {
         toast.success(response.data.message);
         const token = response.data.data.transactionToken;
-        console.log("token", token);
         (window as any).snap.pay(token, {
           onSuccess: function (result: any) {
             alert("payment success!");
