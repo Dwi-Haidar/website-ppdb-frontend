@@ -25,3 +25,7 @@ export interface IPpdbData {
   image: string[];
   noTelp: string;
 }
+
+export interface IPpdbImage {
+  url?: string;
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Logo from "../../assets/image/logosekolah.png"
+import { Link } from 'react-router-dom';
 
 const NavbarUser: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -18,7 +19,6 @@ const NavbarUser: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Determine the background color and text color based on scroll position
   const bgColor = scrollY > 50 ? 'bg-green-600' : 'bg-white';
   const textColor = scrollY > 50 ? 'text-white' : 'text-green-600';
 
@@ -27,7 +27,7 @@ const NavbarUser: React.FC = () => {
       className={`${bgColor} ${textColor} p-4 md:px-9 lg:px-14 transition-all duration-300`}
     >
       <div className="container mx-auto flex justify-between items-center">
-        <img src={Logo} alt="logo" className='w-[44px]'/>
+        <img src={Logo} alt="logo" className='w-[44px]' />
         <div className="hidden md:flex gap-8 items-center">
           <a href="/" className="hover:text-green-800">Home</a>
           <a href="/about" className="hover:text-green-800">About</a>
@@ -59,13 +59,26 @@ const NavbarUser: React.FC = () => {
           </button>
         </div>
       </div>
-      {/* Dropdown menu for mobile */}
       {isOpen && (
         <div className="md:hidden right-3 top-20 absolute bg-green-600 rounded-[15%] p-1 z-50">
-          <a href="#home" className={`block text-gray-200  pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>Home</a>
-          <a href="#about" className={`block  text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>About</a>
-          <a href="#about" className={`block   text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>ppdb-online</a>
-          <a href="#about" className={`block  text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>ppdb-offline</a>
+          <Link to={"/"}>
+            <a className={`block text-gray-200  pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>Home</a>
+          </Link>
+          <Link to={"/about"}>
+            <a className={`block  text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>About</a>
+          </Link>
+          <Link to={"/ppdb-online"}>
+            <a className={`block   text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>ppdb-online</a>
+          </Link>
+          <Link to={"/ppdb-ofline"}>
+            <a className={`block  text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>ppdb-offline</a>
+          </Link>
+          <Link to={"/pengumuman"}>
+            <a className={`block  text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>pengumuman</a>
+          </Link>
+          <Link to={"/login"}>
+            <a className={`block  text-gray-200 pr-[90px] pl-[20px] py-[15px] rounded-full hover:text-black hover:bg-green-400 font-bold`}>Login</a>
+          </Link>
         </div>
       )}
     </nav>

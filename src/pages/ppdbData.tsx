@@ -3,6 +3,7 @@ import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
+import { IPpdbImage } from "../types/types";
 
 
 interface PpdbData {
@@ -27,7 +28,7 @@ interface PpdbData {
   email: string
   createdAt: string;
   updatedAt: string;
-  image: string[];
+  image: IPpdbImage[];
   Kelulusan?: {
     id: number;
     createdAt: string;
@@ -82,9 +83,9 @@ const PpdbDataTable: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-20">
+    <Box className="flex flex-col items-center mt-20">
       {error && <div className="text-red-500 mb-4">{error}</div>}
-      <div className="overflow-x-auto w-[70%] mb-4">
+      <div className="overflow-x-auto w-[96%] mb-4">
         <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
@@ -115,11 +116,7 @@ const PpdbDataTable: React.FC = () => {
               currentItems.map((data) => (
                 <tr key={data.id}>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">
-                    {data.image.length > 0 ? (
-                      <img src={data.image[0]} alt="Foto Siswa" className="w-16 h-16 object-cover rounded-full" />
-                    ) : (
-                      <span>Tidak ada foto</span>
-                    )}
+                    <img src={`http://localhost:5001/uploads/${data.image[0].url}`} alt="foto" style={{ width: '30px', height: '30px' }} />
                   </td>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nama}</td>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nisn}</td>
@@ -150,7 +147,8 @@ const PpdbDataTable: React.FC = () => {
                         onClick={() => postEmail(data.email)}
                       >
                         Send Email
-                      </Button>                    </Box>
+                      </Button>
+                    </Box>
                   </td>
 
                 </tr>
@@ -178,7 +176,7 @@ const PpdbDataTable: React.FC = () => {
         previousLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
         nextLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
       />
-    </div>
+    </Box>
   );
 };
 

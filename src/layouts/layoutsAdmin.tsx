@@ -1,20 +1,35 @@
-import { Outlet } from "react-router-dom"
-import NavbarAdmin from "../components/componentsGlobal/navbarAdmin"
+import { Outlet } from "react-router-dom";
+import NavbarAdmin from "../components/componentsGlobal/navbarAdmin";
+import { Box } from "@mui/material";
 
-const layoutsAdmin = () => {
+const LayoutsAdmin = () => {
   return (
-    <div className="w-full">
-        <div className="flex fixed w-full">
-            <div className="">
-                <NavbarAdmin />
-            </div>
-            <div className="w-[85%]">
-                <Outlet />
-            </div>
+    <Box display={"flex"} sx={{ height: '100vh' }}>
+      <Box
+        sx={{
+          position: 'fixed',
+          width: '250px',
+          top: 0,
+          bottom: 0,
+          overflowY: 'auto',
+          borderRight: '1px solid #ddd',
+          "&::-webkit-scrollbar": { display: "none" }
+        }}
+      >
+        <NavbarAdmin />
+      </Box>
+      <Box
+        sx={{
+          marginLeft: '250px',
+          width: 'calc(100% - 250px)',
+          overflowY: 'auto',
+          height: '100vh'
+        }}
+      >
+        <Outlet />
+      </Box>
+    </Box>
+  );
+};
 
-        </div>
-    </div>
-  )
-}
-
-export default layoutsAdmin
+export default LayoutsAdmin;
