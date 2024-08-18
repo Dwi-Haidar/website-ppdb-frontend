@@ -93,11 +93,15 @@ const PpdbOnline = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/ppdb", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${process.env.BACKEND_URL}/ppdb`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.data.status) {
         toast.success(response.data.message);

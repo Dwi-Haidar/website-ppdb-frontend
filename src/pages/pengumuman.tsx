@@ -25,7 +25,8 @@ interface PpdbData {
   createdAt: string;
   updatedAt: string;
   image: string[]; // Assuming image is an array of image URLs
-  Kelulusan?: { // Optional to handle cases where it's not present
+  Kelulusan?: {
+    // Optional to handle cases where it's not present
     id: number;
     createdAt: string;
     ppdbId: number;
@@ -39,18 +40,20 @@ const Pengumuman: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 5;
-console.log(ppdbData);
+  console.log(ppdbData);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<{ status: boolean; message: string; data: PpdbData[] }>(
-          'http://localhost:5000/ppdb'
-        );
+        const response = await axios.get<{
+          status: boolean;
+          message: string;
+          data: PpdbData[];
+        }>(`${process.env.BACKEND_URL}/ppdb`);
         setPpdbData(response.data.data); // Access 'data' property from the response
         setError(null); // Clear any previous error
       } catch (error) {
-        setError('Error fetching data. Please try again later.');
-        console.error('Error fetching data:', error);
+        setError("Error fetching data. Please try again later.");
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -73,19 +76,34 @@ console.log(ppdbData);
         <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Foto</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Lengkap</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">NISN</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tempat, Tanggal Lahir</th>
-             
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Alamat</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Foto
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Nama Lengkap
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                NISN
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Tempat, Tanggal Lahir
+              </th>
 
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ayah</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Alamat
+              </th>
 
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ibu</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Nama Ayah
+              </th>
 
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Kelulusan</th>
-              
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Nama Ibu
+              </th>
+
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Kelulusan
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -94,30 +112,47 @@ console.log(ppdbData);
                 <tr key={data.id}>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">
                     {data.image.length > 0 ? (
-                      <img src={data.image[0]} alt="Foto Siswa" className="w-16 h-16 object-cover rounded-full" />
+                      <img
+                        src={data.image[0]}
+                        alt="Foto Siswa"
+                        className="w-16 h-16 object-cover rounded-full"
+                      />
                     ) : (
                       <span>Tidak ada foto</span>
                     )}
                   </td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nama}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nisn}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.ttl}</td>
-        
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.alamat}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.nama}
+                  </td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.nisn}
+                  </td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.ttl}
+                  </td>
 
-                 
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pekerjaanAyah}</td>
-                 
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.noTelp}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.alamat}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.pekerjaanAyah}
+                  </td>
+
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.noTelp}
+                  </td>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">
                     {data.Kelulusan?.statusKelulusan ? "Lulus" : "Tidak Lulus"}
                   </td>
-                 
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={18} className="py-3 px-4 border-b text-sm text-gray-700 text-center">
+                <td
+                  colSpan={18}
+                  className="py-3 px-4 border-b text-sm text-gray-700 text-center"
+                >
                   Tidak ada data
                 </td>
               </tr>

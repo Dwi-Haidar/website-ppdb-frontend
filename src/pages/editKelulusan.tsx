@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 interface Kelulusan {
   id: number;
@@ -40,20 +40,22 @@ const EditKelulusan: React.FC = () => {
   const [kelulusan, setKelulusan] = useState<boolean>(false);
   const { id } = useParams<{ id: string }>(); // Mengambil id dari URL params
   const numericId = id ? Number(id) : 0; // Konversi id ke number
-    
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/ppdb/${numericId}`);
+        const response = await axios.get(
+          `${process.env.BACKEND_URL}/${numericId}`
+        );
         if (response.data && response.data.data) {
           setData(response.data.data);
           // Sesuaikan pengaturan kelulusan dengan status dari response
           setKelulusan(response.data.data.Kelulusan?.statusKelulusan ?? false);
         } else {
-          console.error('Data tidak ditemukan');
+          console.error("Data tidak ditemukan");
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -61,36 +63,36 @@ const EditKelulusan: React.FC = () => {
   }, [numericId]);
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setKelulusan(event.target.value === 'true');
+    setKelulusan(event.target.value === "true");
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Sending data:', {
+    console.log("Sending data:", {
       ppdbId: numericId,
       statusKelulusan: kelulusan,
     });
     try {
-      await axios.post(`http://localhost:5000/kelulusan`, {
+      await axios.post(`${process.env.BACKEND_URL}/kelulusan`, {
         ppdbId: numericId,
         statusKelulusan: kelulusan,
       });
-      console.log('Data berhasil dikirim!');
-      alert('Status kelulusan berhasil diperbarui!');
-      window.location.href = '/admin/ppdb-data';
+      console.log("Data berhasil dikirim!");
+      alert("Status kelulusan berhasil diperbarui!");
+      window.location.href = "/admin/ppdb-data";
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || error.message;
-      console.error('Error updating status:', errorMessage);
+      console.error("Error updating status:", errorMessage);
       alert(`Error updating status: ${errorMessage}`);
     }
   };
-  
+
   return (
     <div className="container mx-auto p-6">
       {data ? (
         <form onSubmit={handleSubmit} className="space-y-6">
           <h1 className="text-3xl font-bold mb-4">Edit Kelulusan</h1>
-          
+
           <div className="bg-white shadow-md rounded-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Displaying data in a grid */}
@@ -173,7 +175,9 @@ const EditKelulusan: React.FC = () => {
                 onChange={handleRadioChange}
                 className="mr-2"
               />
-              <label htmlFor="lulus" className="font-semibold">Lulus</label>
+              <label htmlFor="lulus" className="font-semibold">
+                Lulus
+              </label>
             </div>
             <div className="flex items-center mb-2">
               <input
@@ -185,9 +189,16 @@ const EditKelulusan: React.FC = () => {
                 onChange={handleRadioChange}
                 className="mr-2"
               />
-              <label htmlFor="tidaklulus" className="font-semibold">Tidak Lulus</label>
+              <label htmlFor="tidaklulus" className="font-semibold">
+                Tidak Lulus
+              </label>
             </div>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Simpan
+            </button>
           </div>
         </form>
       ) : (
