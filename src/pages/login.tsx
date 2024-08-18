@@ -1,24 +1,70 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 
-const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
+const Login: React.FC = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:5001/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data: { token: string } = await response.json();
+      const { token } = data;
+
+      // Simpan token ke localStorage
+      localStorage.setItem('authToken', token);
+
+      console.log('Login successful:', data);
+
+      // Arahkan pengguna ke halaman admin
+      window.location.href = '/admin';
+    } catch (err) {
+      alert('Username atau password salah');
+      console.error((err as Error).message);
+    }
+  };
+
+  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-sm p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login</h2>
-        <form>
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-600">Email</label>
+            <label htmlFor="username" className="block text-gray-600">Username</label>
             <input
-              id="email"
-              type="email"
+              id="username"
+              type="text"
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-              placeholder="you@example.com"
+              placeholder="your username"
+              value={username}
+              onChange={handleUsernameChange}
               required
             />
           </div>
@@ -29,6 +75,8 @@ const Login = () => {
               type={showPassword ? 'text' : 'password'}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
               placeholder="••••••••"
+              value={password}
+              onChange={handlePasswordChange}
               required
             />
             <button

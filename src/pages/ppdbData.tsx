@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import ReactPaginate from "react-paginate";
 import axios from "axios";
+import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
+import { Box, Button } from "@mui/material";
 
-// Define type for ppdb data
+
 interface PpdbData {
   id: number;
   nama: string;
@@ -12,6 +13,7 @@ interface PpdbData {
   nik: string;
   noKK: string;
   alamat: string;
+  alamatOrtu: string;
   namaAyah: string;
   tahunLahirAyah: string;
   pendidikanAyah: string;
@@ -20,39 +22,55 @@ interface PpdbData {
   tahunLahirIbu: string;
   pendidikanIbu: string;
   pekerjaanIbu: string;
-  alamatOrtu: string;
   noTelp: string;
+  isPaid: boolean;
+  email: string
   createdAt: string;
   updatedAt: string;
-  image: string[]; // Assuming image is an array of image URLs
-  Kelulusan?: number;
-  lulus?: boolean;
+  image: string[];
+  Kelulusan?: {
+    id: number;
+    createdAt: string;
+    ppdbId: number;
+    statusKelulusan: boolean;
+    updatedAt: string;
+  };
 }
 
 const PpdbDataTable: React.FC = () => {
   const [ppdbData, setPpdbData] = useState<PpdbData[]>([]);
+  const [email, setEmail] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 5;
+  console.log(ppdbData);
 
+  const postEmail = async (emailToPost: string) => {
+    try {
+      const res = await axios.post('http://localhost:5001/sendEmail', { email: emailToPost });
+      console.log('Email sent successfully:', res.data);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setError('Error sending email. Please try again later.');
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get<{ status: boolean; message: string; data: PpdbData[] }>(
-          'http://localhost:5000/ppdb'
+          'http://localhost:5001/ppdb'
         );
-        setPpdbData(response.data.data); // Access 'data' property from the response
+
+        setPpdbData(response.data.data);
+        setError(null);
       } catch (error) {
+        setError('Error fetching data. Please try again later.');
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
   }, []);
-
-  if (!Array.isArray(ppdbData)) {
-    console.error("ppdbData is not an array");
-    return null;
-  }
 
   const currentItems = ppdbData.slice(
     currentPage * itemsPerPage,
@@ -65,96 +83,101 @@ const PpdbDataTable: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center mt-20">
+      {error && <div className="text-red-500 mb-4">{error}</div>}
       <div className="overflow-x-auto w-[70%] mb-4">
         <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
-            <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Kelulusan</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">Foto</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Lengkap</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">NISN</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Tempat, Tanggal Lahir</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[12%]">NIK</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[12%]">No. KK</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">Alamat</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Tahun Lahir Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Pendidikan Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Pekerjaan Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Tahun Lahir Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Pendidikan Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Pekerjaan Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">Alamat Orang Tua</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">No. Telepon</th>
-           
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Action</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Foto</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Lengkap</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">NISN</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tempat, Tanggal Lahir</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">NIK</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">No. KK</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Alamat</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Alamat Ortu</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ayah</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tahun Lahir Ayah</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pendidikan Ayah</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pekerjaan Ayah</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ibu</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tahun Lahir Ibu</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pendidikan Ibu</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pekerjaan Ibu</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">No. Telepon</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Kelulusan</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Email</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Action</th>
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((data, index) => (
-              <tr key={index}>
-                
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
-                  {data.Kelulusan ? (
-                    data.lulus === true ? "Lulus" : "Tidak Lulus"
-                  ) : (
-                    "Belum Dikonfirmasi"
-                  )}
-                </td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
-                  {data.image && data.image.length > 0 ? (
-                    <img src={data.image[0]} alt="Foto Siswa" className="w-16 h-16 object-cover rounded-full" />
-                  ) : (
-                    <span>Tidak ada foto</span>
-                  )}
-                </td>
-                
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nama}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nisn}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.ttl}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.nik}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noKK}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.alamat}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.namaAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tahunLahirAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pendidikanAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pekerjaanAyah}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.namaIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.tahunLahirIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pendidikanIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.pekerjaanIbu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.alamatOrtu}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{data.noTelp}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
-                  <Link
-                    to={`edit/${data.id}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Konfirmasi
-                  </Link>
+            {currentItems.length > 0 ? (
+              currentItems.map((data) => (
+                <tr key={data.id}>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.image.length > 0 ? (
+                      <img src={data.image[0]} alt="Foto Siswa" className="w-16 h-16 object-cover rounded-full" />
+                    ) : (
+                      <span>Tidak ada foto</span>
+                    )}
+                  </td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nama}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nisn}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.ttl}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nik}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.noKK}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.alamat}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.alamatOrtu}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.namaAyah}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.tahunLahirAyah}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pendidikanAyah}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pekerjaanAyah}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.namaIbu}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.tahunLahirIbu}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pendidikanIbu}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pekerjaanIbu}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.noTelp}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    {data.Kelulusan?.statusKelulusan ? "Lulus" : "Tidak Lulus"}
+
+                  </td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.email}</td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                      <Link to={`edit/${data.id}`} className="text-blue-600 hover:underline">Edit</Link>
+                      <Button
+                        sx={{ fontSize: '11px', color: 'green' }}
+                        onClick={() => postEmail(data.email)}
+                      >
+                        Send Email
+                      </Button>                    </Box>
+                  </td>
+
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={18} className="py-3 px-4 border-b text-sm text-gray-700 text-center">
+                  Tidak ada data
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
-      <div className="mt-4">
-        <ReactPaginate
-          pageCount={Math.ceil(ppdbData.length / itemsPerPage)}
-          onPageChange={handlePageClick}
-          containerClassName="pagination flex justify-center"
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          nextClassName="page-item"
-          previousLinkClassName="page-link"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          activeClassName="active"
-        />
-      </div>
+      <ReactPaginate
+        pageCount={Math.ceil(ppdbData.length / itemsPerPage)}
+        onPageChange={handlePageClick}
+        containerClassName="pagination flex justify-center"
+        pageClassName="page-item"
+        pageLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+        activeClassName="active"
+        activeLinkClassName="bg-blue-500 text-white"
+        previousClassName="previous-page"
+        nextClassName="next-page"
+        previousLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+        nextLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+      />
     </div>
   );
 };

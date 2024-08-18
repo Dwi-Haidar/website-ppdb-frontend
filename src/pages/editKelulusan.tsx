@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-interface Data {
+interface Kelulusan {
+  id: number;
+  createdAt: string;
+  ppdbId: number;
+  statusKelulusan: boolean;
+  updatedAt: string;
+}
+
+interface PpdbData {
   id: number;
   nama: string;
   nisn: string;
@@ -9,6 +18,7 @@ interface Data {
   nik: string;
   noKK: string;
   alamat: string;
+  alamatOrtu: string;
   namaAyah: string;
   tahunLahirAyah: string;
   pendidikanAyah: string;
@@ -17,45 +27,64 @@ interface Data {
   tahunLahirIbu: string;
   pendidikanIbu: string;
   pekerjaanIbu: string;
-  alamatOrtu: string;
   noTelp: string;
+  isPaid: boolean;
+  createdAt: string;
+  updatedAt: string;
+  image: string[]; // Assuming image is an array of image URLs
+  Kelulusan?: Kelulusan; // Optional to handle cases where it's not present
 }
 
 const EditKelulusan: React.FC = () => {
-  const [data, setData] = useState<Data | null>(null);
+  const [data, setData] = useState<PpdbData | null>(null);
   const [kelulusan, setKelulusan] = useState<boolean>(false);
-
+  const { id } = useParams<{ id: string }>(); // Mengambil id dari URL params
+  const numericId = id ? Number(id) : 0; // Konversi id ke number
+    
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/ppdb/1');
-        setData(response.data.data); 
-        setKelulusan(response.data.data.status === 'Lulus');  data
+        const response = await axios.get(`http://localhost:5000/ppdb/${numericId}`);
+        if (response.data && response.data.data) {
+          setData(response.data.data);
+          // Sesuaikan pengaturan kelulusan dengan status dari response
+          setKelulusan(response.data.data.Kelulusan?.statusKelulusan ?? false);
+        } else {
+          console.error('Data tidak ditemukan');
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [numericId]);
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setKelulusan(event.target.checked);
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setKelulusan(event.target.value === 'true');
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log('Sending data:', {
+      ppdbId: numericId,
+      statusKelulusan: kelulusan,
+    });
     try {
-      await axios.put('http://localhost:5000/ppdb/1', {
-        ...data,
-        status: kelulusan ? 'Lulus' : 'Tidak Lulus',
+      await axios.post(`http://localhost:5001/kelulusan`, {
+        ppdbId: numericId,
+        statusKelulusan: kelulusan,
       });
+      console.log('Data berhasil dikirim!');
       alert('Status kelulusan berhasil diperbarui!');
-    } catch (error) {
-      console.error('Error updating status:', error);
+      window.location.href = '/admin/ppdb-data';
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message;
+      console.error('Error updating status:', errorMessage);
+      alert(`Error updating status: ${errorMessage}`);
     }
   };
-
+  
   return (
     <div className="container mx-auto p-6">
       {data ? (
@@ -64,6 +93,7 @@ const EditKelulusan: React.FC = () => {
           
           <div className="bg-white shadow-md rounded-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Displaying data in a grid */}
               <div className="flex justify-between items-center border-b py-2">
                 <span className="font-semibold">ID:</span>
                 <span className="text-gray-700">{data.id}</span>
@@ -134,37 +164,34 @@ const EditKelulusan: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center mb-2">
-                <input
-                  type="radio"
-                  id="lulus"
-                  name='kelulusan'
-                  
-                  className="mr-2"
-                />
-                <label htmlFor="lulus" className="font-semibold">Lulus</label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  id="tidaklulus"
-                   name='kelulusan'
-                  className="mr-2"
-                />
-                <label htmlFor="tidaklulus" className="font-semibold">Tidak Lulus</label>
-              </div>
+              <input
+                type="radio"
+                id="lulus"
+                name="kelulusan"
+                value="true"
+                checked={kelulusan === true}
+                onChange={handleRadioChange}
+                className="mr-2"
+              />
+              <label htmlFor="lulus" className="font-semibold">Lulus</label>
+            </div>
+            <div className="flex items-center mb-2">
+              <input
+                type="radio"
+                id="tidaklulus"
+                name="kelulusan"
+                value="false"
+                checked={kelulusan === false}
+                onChange={handleRadioChange}
+                className="mr-2"
+              />
+              <label htmlFor="tidaklulus" className="font-semibold">Tidak Lulus</label>
+            </div>
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
           </div>
-          <div className='flex w-full justify-end'>
-            <button
-              type="submit"
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              Simpan
-            </button>
-          </div>
-          
         </form>
       ) : (
-        <p className="text-gray-500">Loading...</p>
+        <p>Loading data...</p>
       )}
     </div>
   );
