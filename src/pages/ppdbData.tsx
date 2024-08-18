@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
+import { Box, Button } from "@mui/material";
 
-// Define type for ppdb data
 interface PpdbData {
   id: number;
   nama: string;
@@ -23,11 +23,11 @@ interface PpdbData {
   pekerjaanIbu: string;
   noTelp: string;
   isPaid: boolean;
+  email: string;
   createdAt: string;
   updatedAt: string;
-  image: string[]; // Assuming image is an array of image URLs
+  image: string[];
   Kelulusan?: {
-    // Optional to handle cases where it's not present
     id: number;
     createdAt: string;
     ppdbId: number;
@@ -42,6 +42,18 @@ const PpdbDataTable: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 5;
   console.log(ppdbData);
+
+  const postEmail = async (emailToPost: string) => {
+    try {
+      const res = await axios.post(`${process.env.BACKEND_URL}/sendEmail`, {
+        email: emailToPost,
+      });
+      console.log("Email sent successfully:", res.data);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      setError("Error sending email. Please try again later.");
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,8 +62,9 @@ const PpdbDataTable: React.FC = () => {
           message: string;
           data: PpdbData[];
         }>(`${process.env.BACKEND_URL}/ppdb`);
-        setPpdbData(response.data.data); // Access 'data' property from the response
-        setError(null); // Clear any previous error
+
+        setPpdbData(response.data.data);
+        setError(null);
       } catch (error) {
         setError("Error fetching data. Please try again later.");
         console.error("Error fetching data:", error);
@@ -132,6 +145,9 @@ const PpdbDataTable: React.FC = () => {
                 Kelulusan
               </th>
               <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
+                Email
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">
                 Action
               </th>
             </tr>
@@ -203,12 +219,29 @@ const PpdbDataTable: React.FC = () => {
                     {data.Kelulusan?.statusKelulusan ? "Lulus" : "Tidak Lulus"}
                   </td>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">
-                    <Link
-                      to={`edit/${data.id}`}
-                      className="text-blue-600 hover:underline"
+                    {data.email}
+                  </td>
+                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        textAlign: "center",
+                      }}
                     >
-                      Edit
-                    </Link>
+                      <Link
+                        to={`edit/${data.id}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </Link>
+                      <Button
+                        sx={{ fontSize: "11px", color: "green" }}
+                        onClick={() => postEmail(data.email)}
+                      >
+                        Send Email
+                      </Button>{" "}
+                    </Box>
                   </td>
                 </tr>
               ))

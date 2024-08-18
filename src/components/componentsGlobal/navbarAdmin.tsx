@@ -4,9 +4,9 @@ import logo from "../../assets/image/logosekolah.png";
 
 const NavbarAdmin: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); 
+    localStorage.removeItem('authToken');
     navigate('/');
   };
 
@@ -20,9 +20,8 @@ const NavbarAdmin: FC = () => {
       </button>
 
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-green-500 text-white transform h-[100vh] ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform md:relative md:translate-x-0 md:flex md:flex-col`}
+        className={`fixed inset-y-0 left-0 w-64 bg-green-500 text-white transform h-[100vh] ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform md:relative md:translate-x-0 md:flex md:flex-col`}
       >
         <button
           className="p-2 text-gray-700 bg-gray-200 md:hidden hover:bg-gray-300"
@@ -46,12 +45,12 @@ const NavbarAdmin: FC = () => {
             </ul>
           </nav>
         </div>
-              <button
-                className="mt-auto mb-4 p-2 text-gray-700 bg-gray-200 hover:bg-gray-300 my-10"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
+        <button
+          className="mt-auto mb-4 p-2 text-gray-700 bg-gray-200 hover:bg-gray-300 my-10"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

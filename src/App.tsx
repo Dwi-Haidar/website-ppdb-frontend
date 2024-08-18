@@ -9,18 +9,15 @@ import Dashboard from "./pages/dashboard";
 import DataPpdb from "./pages/ppdbData";
 import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
-import DataPpdbEdit from "./pages/editKelulusan"; 
+import DataPpdbEdit from "./pages/editKelulusan";
 import { useEffect } from "react";
 
 const App = () => {
-  const isAuthenticated = !!localStorage.getItem('authToken');
+  const isAuthenticated = !!localStorage.getItem("authToken");
 
   const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
-
-
-const App = () => {
   useEffect(() => {
     const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
     const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
@@ -31,7 +28,7 @@ const App = () => {
 
     document.body.appendChild(script);
   }, []);
-}
+
   return (
     <div>
       <BrowserRouter>
@@ -44,10 +41,18 @@ const App = () => {
             <Route path="ppdb-online" element={<PpdbOnline />} />
             <Route path="ppdb-ofline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
+            {/* <Route path="artikel" element={<ArticlesPage />} /> */}
           </Route>
-          
+
           {/* Protected Routes */}
-          <Route path="/admin" element={<ProtectedRoute><LayoutsAdmin /></ProtectedRoute>}>
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <LayoutsAdmin />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Dashboard />} />
             <Route path="ppdb-data" element={<DataPpdb />} />
             <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />

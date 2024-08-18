@@ -45,6 +45,7 @@ const PpdbOnline = () => {
   });
 
   const [images, setImages] = useState<FileList | null>(null);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -71,6 +72,20 @@ const PpdbOnline = () => {
       return false;
     }
     return true;
+  };
+
+  const handleValidationError = (message: string) => {
+    if (message.includes("NIK")) {
+      toast.error("NIK sudah terdaftar.");
+    } else if (message.includes("No KK")) {
+      toast.error("No KK sudah terdaftar.");
+    } else if (message.includes("NISN")) {
+      toast.error("NISN sudah terdaftar.");
+    } else if (message.includes("Email")) {
+      toast.error("Email sudah terdaftar.");
+    } else {
+      toast.error(message);
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -104,34 +119,40 @@ const PpdbOnline = () => {
       );
 
       if (response.data.status) {
-        toast.success(response.data.message);
+        toast.success("Data berhasil dikirim.");
         const token = response.data.data.transactionToken;
         (window as any).snap.pay(token, {
           onSuccess: function (result: any) {
-            alert("payment success!");
+            alert("Payment success!");
             console.log(result);
           },
           onPending: function (result: any) {
-            /* You may add your own implementation here */
-            alert("wating your payment!");
+            alert("Waiting your payment!");
             console.log(result);
           },
           onError: function (result: any) {
-            /* You may add your own implementation here */
-            alert("payment failed!");
+            alert("Payment failed!");
             console.log(result);
           },
           onClose: function () {
-            /* You may add your own implementation here */
-            alert("you closed the popup without finishing the payment");
+            alert("You closed the popup without finishing the payment.");
           },
         });
       } else {
-        toast.error(response.data.message);
+        handleValidationError(response.data.message);
       }
     } catch (error: any) {
-      console.error("Error details:", error.response || error.message || error);
-      toast.error("Terjadi kesalahan saat memproses data2.");
+      if (error.response) {
+        const message =
+          error.response.data.message ||
+          "Terjadi kesalahan saat mengirim data.";
+        toast.error(message);
+      } else if (error.request) {
+        toast.error("Tidak ada respons dari server.");
+      } else {
+        toast.error("Terjadi kesalahan: " + error.message);
+      }
+      console.error("Error details:", error);
     }
   };
 
@@ -241,17 +262,12 @@ const PpdbOnline = () => {
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
             />
           </div>
-          <div className="mb-4">
-            <div id="snap-container"></div> {/* Container for Snap */}
-          </div>
-          <div className="mb-4">
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Submit
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Kirim
+          </button>
         </div>
       </form>
       <ToastContainer />
