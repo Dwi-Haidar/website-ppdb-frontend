@@ -29,8 +29,8 @@ const EditKelulusan: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/ppdb/1');
-        setData(response.data.data); // Mengambil data dari response.data.data
-        setKelulusan(response.data.data.status === 'Lulus'); // Misalnya status disimpan di data
+        setData(response.data.data); 
+        setKelulusan(response.data.data.status === 'Lulus');  data
       } catch (error) {
         console.error('Error fetching data:', error);
       }

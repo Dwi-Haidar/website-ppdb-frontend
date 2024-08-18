@@ -1,12 +1,12 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Navigate, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface FormData {
   nama: string;
   nisn: string;
+  email: string;
   ttl: string;
   nik: string;
   noKK: string;
@@ -27,6 +27,7 @@ const PpdbOnline = () => {
   const [formData, setFormData] = useState<FormData>({
     nama: "",
     nisn: "",
+    email: "",
     ttl: "",
     nik: "",
     noKK: "",
@@ -45,7 +46,6 @@ const PpdbOnline = () => {
 
   const [images, setImages] = useState<FileList | null>(null);
 
-  const navigate = useNavigate();
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -71,8 +71,21 @@ const PpdbOnline = () => {
       toast.error("No. KK harus terdiri dari 16 angka.");
       return false;
     }
-
     return true;
+  };
+
+  const handleValidationError = (message: string) => {
+    if (message.includes("NIK")) {
+      toast.error("NIK sudah terdaftar.");
+    } else if (message.includes("No KK")) {
+      toast.error("No KK sudah terdaftar.");
+    } else if (message.includes("NISN")) {
+      toast.error("NISN sudah terdaftar.");
+    } else if (message.includes("Email")) {
+      toast.error("Email sudah terdaftar.");
+    } else {
+      toast.error(message);
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -95,15 +108,45 @@ const PpdbOnline = () => {
     }
 
     try {
-      await axios.post("http://localhost:5001/ppdb", data, {
+      const response = await axios.post("http://localhost:5000/ppdb", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      navigate("/");
-      toast.success("Data berhasil diproses!");
-    } catch (error) {
-      toast.error("Terjadi kesalahan saat memproses data.");
+
+      if (response.data.status) {
+        toast.success("Data berhasil dikirim.");
+        const token = response.data.data.transactionToken;
+        (window as any).snap.pay(token, {
+          onSuccess: function (result: any) {
+            alert("Payment success!");
+            console.log(result);
+          },
+          onPending: function (result: any) {
+            alert("Waiting your payment!");
+            console.log(result);
+          },
+          onError: function (result: any) {
+            alert("Payment failed!");
+            console.log(result);
+          },
+          onClose: function () {
+            alert("You closed the popup without finishing the payment.");
+          },
+        });
+      } else {
+        handleValidationError(response.data.message);
+      }
+    } catch (error: any) {
+      if (error.response) {
+        const message = error.response.data.message || "Terjadi kesalahan saat mengirim data.";
+        toast.error(message);
+      } else if (error.request) {
+        toast.error("Tidak ada respons dari server.");
+      } else {
+        toast.error("Terjadi kesalahan: " + error.message);
+      }
+      console.error("Error details:", error);
     }
   };
 
@@ -129,10 +172,13 @@ const PpdbOnline = () => {
             { label: "Pendidikan Ibu", name: "pendidikanIbu", type: "text" },
             { label: "Pekerjaan Ibu", name: "pekerjaanIbu", type: "text" },
             { label: "Alamat Orang Tua", name: "alamatOrtu", type: "text" },
-            { label: "No Telepon", name: "noTelp", type: "text" }
+            { label: "No Telepon", name: "noTelp", type: "text" },
           ].map((field) => (
             <div className="mb-4" key={field.name}>
-              <label htmlFor={field.name} className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor={field.name}
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {field.label}
               </label>
               <input
@@ -147,65 +193,75 @@ const PpdbOnline = () => {
             </div>
           ))}
           <div className="mb-4">
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="file1"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Foto SKL
             </label>
             <input
               type="file"
-              id="image"
-              name="image"
+              id="file1"
+              name="file1"
               onChange={handleFileChange}
               multiple
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="file2"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Foto Kartu Keluarga
             </label>
             <input
               type="file"
-              id="image"
-              name="image"
+              id="file2"
+              name="file2"
               onChange={handleFileChange}
               multiple
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="file3"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Upload Akte Kelahiran
             </label>
             <input
               type="file"
-              id="image"
-              name="image"
+              id="file3"
+              name="file3"
               onChange={handleFileChange}
               multiple
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="file4"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Foto Ijazah
             </label>
             <input
               type="file"
-              id="image"
-              name="image"
+              id="file4"
+              name="file4"
               onChange={handleFileChange}
               multiple
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
             />
           </div>
-          <div className="mb-4">
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Submit
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Kirim
+          </button>
         </div>
       </form>
       <ToastContainer />

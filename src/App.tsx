@@ -9,10 +9,21 @@ import Dashboard from "./pages/dashboard";
 import DataPpdb from "../src/pages/ppdbData";
 import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
+import { useEffect } from "react";
+
 import DataPpdbEdit from "./pages/editKelulusan";
-import Berita from "./pages/berita";
-import ArticlesPage from "./pages/article";
 const App = () => {
+  useEffect(() => {
+    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+    const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
+    const script = document.createElement("script");
+    script.src = snapScript;
+    script.setAttribute("data-client-key", clientKey);
+    script.async = true;
+
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <div>
       <BrowserRouter>
@@ -24,7 +35,6 @@ const App = () => {
             <Route path="ppdb-online" element={<PpdbOnline />} />
             <Route path="ppdb-ofline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
-            <Route path="berita" element={<Berita />} />
             {/* <Route path="artikel" element={<ArticlesPage />} /> */}
           </Route>
           <Route path="/admin" element={<LayoutsAdmin />}>
