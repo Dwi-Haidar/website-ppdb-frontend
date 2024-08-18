@@ -16,22 +16,20 @@ const App = () => {
   const isAuthenticated = !!localStorage.getItem('authToken');
 
   const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+    useEffect(() => {
+      const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+      const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
+      const script = document.createElement("script");
+      script.src = snapScript;
+      script.setAttribute("data-client-key", clientKey);
+      script.async = true;
+      
+      document.body.appendChild(script);
+    }, []);
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
 
 
-const App = () => {
-  useEffect(() => {
-    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
-    const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
-    const script = document.createElement("script");
-    script.src = snapScript;
-    script.setAttribute("data-client-key", clientKey);
-    script.async = true;
-
-    document.body.appendChild(script);
-  }, []);
-}
   return (
     <div>
       <BrowserRouter>
