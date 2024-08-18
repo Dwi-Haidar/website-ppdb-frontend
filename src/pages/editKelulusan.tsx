@@ -35,7 +35,7 @@ interface PpdbData {
   createdAt: string;
   updatedAt: string;
   image: IPpdbImage[];
-  Kelulusan?: Kelulusan; // Optional to handle cases where it's not present
+  Kelulusan?: Kelulusan;
 }
 
 const EditKelulusan: React.FC = () => {
@@ -43,8 +43,8 @@ const EditKelulusan: React.FC = () => {
   const [kelulusan, setKelulusan] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const { id } = useParams<{ id: string }>(); // Mengambil id dari URL params
-  const numericId = id ? Number(id) : 0; // Konversi id ke number
+  const { id } = useParams<{ id: string }>();
+  const numericId = id ? Number(id) : 0;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +52,7 @@ const EditKelulusan: React.FC = () => {
         const response = await axios.get(`http://localhost:5001/ppdb/${numericId}`);
         if (response.data && response.data.data) {
           setData(response.data.data);
-          // Sesuaikan pengaturan kelulusan dengan status dari response
+
           setKelulusan(response.data.data.Kelulusan?.statusKelulusan ?? false);
         } else {
           console.error('Data tidak ditemukan');
