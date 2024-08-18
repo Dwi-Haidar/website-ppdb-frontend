@@ -108,12 +108,15 @@ const PpdbOnline = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/ppdb", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      
+      const response = await axios.post(
+        `http://localhost:5001/ppdb`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.data.status) {
         toast.success("Data berhasil dikirim.");
@@ -140,7 +143,9 @@ const PpdbOnline = () => {
       }
     } catch (error: any) {
       if (error.response) {
-        const message = error.response.data.message || "Terjadi kesalahan saat mengirim data.";
+        const message =
+          error.response.data.message ||
+          "Terjadi kesalahan saat mengirim data.";
         toast.error(message);
       } else if (error.request) {
         toast.error("Tidak ada respons dari server.");
