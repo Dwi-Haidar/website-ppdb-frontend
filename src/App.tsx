@@ -44,6 +44,7 @@ const App = () => {
             <Route path="ppdb-online" element={<PpdbOnline />} />
             <Route path="ppdb-ofline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
+            {/* <Route path="artikel" element={<ArticlesPage />} /> */}
           </Route>
           
           {/* Protected Routes */}

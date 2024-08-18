@@ -44,7 +44,7 @@ console.log(ppdbData);
     const fetchData = async () => {
       try {
         const response = await axios.get<{ status: boolean; message: string; data: PpdbData[] }>(
-          'http://localhost:5000/ppdb'
+          'http://localhost:5001/ppdb'
         );
         setPpdbData(response.data.data); // Access 'data' property from the response
         setError(null); // Clear any previous error

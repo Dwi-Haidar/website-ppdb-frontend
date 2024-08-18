@@ -71,7 +71,7 @@ const EditKelulusan: React.FC = () => {
       statusKelulusan: kelulusan,
     });
     try {
-      await axios.post(`http://localhost:5000/kelulusan`, {
+      await axios.post(`http://localhost:5001/kelulusan`, {
         ppdbId: numericId,
         statusKelulusan: kelulusan,
       });
