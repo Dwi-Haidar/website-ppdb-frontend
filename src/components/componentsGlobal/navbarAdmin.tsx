@@ -42,6 +42,9 @@ const NavbarAdmin: FC = () => {
               <li className="py-2 hover:bg-green-600 rounded pl-4">
                 <Link to="/admin/ppdb-data">Table PPDB</Link>
               </li>
+              <li className="py-2 hover:bg-green-600 rounded pl-4">
+                <Link to="/admin/ppdb-kelulusan">Table Kelulusan</Link>
+              </li>
             </ul>
           </nav>
         </div>

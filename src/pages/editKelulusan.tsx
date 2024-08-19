@@ -34,6 +34,7 @@ interface PpdbData {
   isPaid: boolean;
   createdAt: string;
   updatedAt: string;
+  fotoMurid: string
   image: IPpdbImage[];
   Kelulusan?: Kelulusan;
 }
@@ -105,7 +106,7 @@ const EditKelulusan: React.FC = () => {
       {data ? (
         <Card elevation={3}>
           <CardHeader
-            avatar={<Avatar sx={{ bgcolor: blue[500] }}>{data.nama.charAt(0)}</Avatar>}
+            avatar={<Avatar src={`http://localhost:5001/uploads/${data.fotoMurid}`} sx={{ bgcolor: blue[500], objectFit: 'fill' }}></Avatar>}
             title={data.nama}
             subheader={`NISN: ${data.nisn}`}
             sx={{ backgroundColor: blue[100] }}

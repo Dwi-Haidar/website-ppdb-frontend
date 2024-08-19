@@ -28,4 +28,5 @@ export interface IPpdbData {
 
 export interface IPpdbImage {
   url?: string;
+  id?: number;
 }

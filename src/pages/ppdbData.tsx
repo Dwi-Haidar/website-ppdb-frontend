@@ -20,6 +20,7 @@ interface PpdbData {
   pendidikanAyah: string;
   pekerjaanAyah: string;
   namaIbu: string;
+  fotoMurid: string;
   tahunLahirIbu: string;
   pendidikanIbu: string;
   pekerjaanIbu: string;
@@ -116,7 +117,7 @@ const PpdbDataTable: React.FC = () => {
               currentItems.map((data) => (
                 <tr key={data.id}>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">
-                    <img src={`http://localhost:5001/uploads/${data.image[0].url}`} alt="foto" style={{ width: '30px', height: '30px' }} />
+                    <img src={`http://localhost:5001/uploads/${data.fotoMurid}`} alt="foto" style={{ width: '30px', height: '30px' }} />
                   </td>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nama}</td>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nisn}</td>
