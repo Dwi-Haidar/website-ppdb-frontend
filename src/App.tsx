@@ -11,6 +11,7 @@ import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
 import DataPpdbEdit from "./pages/editKelulusan";
 import { useEffect } from "react";
+import DataKelulusan from "./pages/dataKelulusan";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("authToken");
@@ -18,6 +19,9 @@ const App = () => {
   const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
+
+
+const App = () => {
   useEffect(() => {
     const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
     const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
@@ -28,7 +32,7 @@ const App = () => {
 
     document.body.appendChild(script);
   }, []);
-
+}
   return (
     <div>
       <BrowserRouter>
@@ -55,7 +59,9 @@ const App = () => {
           >
             <Route index element={<Dashboard />} />
             <Route path="ppdb-data" element={<DataPpdb />} />
+            <Route path="ppdb-kelulusan" element={<DataKelulusan />} />
             <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />
+
           </Route>
         </Routes>
       </BrowserRouter>

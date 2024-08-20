@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, FormControl, FormControlLabel, Radio, RadioGroup, Button, Paper, Grid, Container, Card, CardContent, CardHeader, Avatar, Modal } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { IPpdbImage } from '../types/types';
+import API from '../libs';
 
 interface Kelulusan {
   id: number;
@@ -34,7 +34,6 @@ interface PpdbData {
   isPaid: boolean;
   createdAt: string;
   updatedAt: string;
-  fotoMurid: string
   image: IPpdbImage[];
   Kelulusan?: Kelulusan;
 }
@@ -47,23 +46,17 @@ const EditKelulusan: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const numericId = id ? Number(id) : 0;
 
+  const GetdetailKelulusan = async () => {
+    try {
+      const response = await API.get(`ppdb/${numericId}`);
+      setData(response.data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5001/ppdb/${numericId}`);
-        if (response.data && response.data.data) {
-          setData(response.data.data);
 
-          setKelulusan(response.data.data.Kelulusan?.statusKelulusan ?? false);
-        } else {
-          console.error('Data tidak ditemukan');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
+    GetdetailKelulusan();
   }, [numericId]);
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,22 +65,13 @@ const EditKelulusan: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Sending data:', {
-      ppdbId: numericId,
-      statusKelulusan: kelulusan,
-    });
     try {
-      await axios.post(`http://localhost:5001/kelulusan`, {
+      await API.post(`kelulusan`, {
         ppdbId: numericId,
         statusKelulusan: kelulusan,
       });
-      console.log('Data berhasil dikirim!');
-      alert('Status kelulusan berhasil diperbarui!');
-      // window.location.href = '/admin/ppdb-data';
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || error.message;
-      console.error('Error updating status:', errorMessage);
-      alert(`Error updating status: ${errorMessage}`);
+      console.log(error);
     }
   };
 
@@ -106,15 +90,17 @@ const EditKelulusan: React.FC = () => {
       {data ? (
         <Card elevation={3}>
           <CardHeader
-            avatar={<Avatar src={`http://localhost:5001/uploads/${data.fotoMurid}`} sx={{ bgcolor: blue[500], objectFit: 'fill' }}></Avatar>}
+            avatar={<Avatar sx={{ bgcolor: blue[500] }}>{data.nama.charAt(0)}</Avatar>}
             title={data.nama}
             subheader={`NISN: ${data.nisn}`}
-            sx={{ backgroundColor: blue[100] }}
+            titleTypographyProps={{ variant: 'h6' }}
+            subheaderTypographyProps={{ variant: 'body1', color: 'white' }}
+            sx={{ backgroundColor: '#73ee11', color: 'white' }}
           />
           <CardContent>
             <Typography variant="h6" gutterBottom>Informasi Data</Typography>
             <Grid container spacing={3}>
-              {/* Informasi Pribadi */}
+
               <Grid item xs={12} md={6}>
                 <Typography variant="body1" color="textSecondary">TTL:</Typography>
                 <Typography variant="body2">{data.ttl}</Typography>
@@ -173,7 +159,7 @@ const EditKelulusan: React.FC = () => {
                 <Typography variant="body2">{data.noTelp}</Typography>
               </Grid>
 
-              {/* Bagian untuk Menampilkan Gambar */}
+
               <Grid item xs={12} md={6}>
                 <Typography>Berkas Murid</Typography>
                 <Box
@@ -213,11 +199,11 @@ const EditKelulusan: React.FC = () => {
               </FormControl>
             </Box>
 
-            <Box onClick={handleSubmit} sx={{ marginTop: 4, textAlign: 'center' }}>
+            <form onSubmit={handleSubmit} style={{ marginTop: 4, textAlign: 'center' }}>
               <Button type="submit" variant="contained" color="primary">
                 Simpan Perubahan
               </Button>
-            </Box>
+            </form>
           </CardContent>
         </Card>
       ) : (

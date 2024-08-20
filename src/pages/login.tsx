@@ -1,11 +1,12 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-
+  const navigate = useNavigate();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -28,16 +29,9 @@ const Login: React.FC = () => {
 
       const data: { token: string } = await response.json();
       const { token } = data;
-
-      // Simpan token ke localStorage
       localStorage.setItem('authToken', token);
-
-      console.log('Login successful:', data);
-
-      // Arahkan pengguna ke halaman admin
-      window.location.href = '/admin';
+      navigate('/admin');
     } catch (err) {
-      alert('Username atau password salah');
       console.error((err as Error).message);
     }
   };
