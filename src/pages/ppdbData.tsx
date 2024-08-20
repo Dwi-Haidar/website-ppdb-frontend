@@ -1,47 +1,14 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
-import { Box, Button } from "@mui/material";
-import { IPpdbImage } from "../types/types";
-
-
-interface PpdbData {
-  id: number;
-  nama: string;
-  nisn: string;
-  ttl: string;
-  nik: string;
-  noKK: string;
-  alamat: string;
-  alamatOrtu: string;
-  namaAyah: string;
-  tahunLahirAyah: string;
-  pendidikanAyah: string;
-  pekerjaanAyah: string;
-  namaIbu: string;
-  fotoMurid: string;
-  tahunLahirIbu: string;
-  pendidikanIbu: string;
-  pekerjaanIbu: string;
-  noTelp: string;
-  isPaid: boolean;
-  email: string
-  createdAt: string;
-  updatedAt: string;
-  image: IPpdbImage[];
-  Kelulusan?: {
-    id: number;
-    createdAt: string;
-    ppdbId: number;
-    statusKelulusan: boolean;
-    updatedAt: string;
-  };
-}
+import { Box, Button, Card, IconButton, TextField, Typography } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
+import { PpdbData } from "../types/types";
+import API from "../libs";
 
 const PpdbDataTable: React.FC = () => {
   const [ppdbData, setPpdbData] = useState<PpdbData[]>([]);
-  const [email, setEmail] = useState<string>('');
+  const [searchnisn, setSearchnisn] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 5;
@@ -49,7 +16,7 @@ const PpdbDataTable: React.FC = () => {
 
   const postEmail = async (emailToPost: string) => {
     try {
-      const res = await axios.post('http://localhost:5001/sendEmail', { email: emailToPost });
+      const res = await API.post('sendEmail', { email: emailToPost });
       console.log('Email sent successfully:', res.data);
     } catch (error) {
       console.error('Error sending email:', error);
@@ -59,8 +26,8 @@ const PpdbDataTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<{ status: boolean; message: string; data: PpdbData[] }>(
-          'http://localhost:5001/ppdb'
+        const response = await API.get<{ status: boolean; message: string; data: PpdbData[] }>(
+          'ppdb'
         );
 
         setPpdbData(response.data.data);
@@ -74,7 +41,11 @@ const PpdbDataTable: React.FC = () => {
     fetchData();
   }, []);
 
-  const currentItems = ppdbData.slice(
+  const filteredData = ppdbData.filter(data =>
+    data.nisn.toLowerCase().includes(searchnisn.toLowerCase())
+  );
+
+  const currentItems = filteredData.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
@@ -84,63 +55,85 @@ const PpdbDataTable: React.FC = () => {
   };
 
   return (
-    <Box className="flex flex-col items-center mt-20">
+    <Box className="flex flex-col items-center mt-10">
       {error && <div className="text-red-500 mb-4">{error}</div>}
+
       <div className="overflow-x-auto w-[96%] mb-4">
-        <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
-          <thead>
+        <Card sx={{ width: '100%', maxWidth: 400, padding: 3, boxShadow: 3, borderRadius: 2, mb: 4 }}>
+          <Typography variant="h6" mb={2}>Cari Data Siswa Berdasarkan NISN</Typography>
+          <TextField
+            label="Masukkan NISN"
+            variant="outlined"
+            size="small"
+            value={searchnisn}
+            onChange={(e) => setSearchnisn(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton edge="end" aria-label="search">
+                  <SearchIcon />
+                </IconButton>
+              ),
+            }}
+            sx={{
+              width: '100%',
+              backgroundColor: '#f5f5f5',
+              borderRadius: 2,
+            }}
+          />
+        </Card>
+        <table className="min-w-full bg-white shadow-md rounded-lg border border-black-200">
+          <thead >
             <tr>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Foto</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Lengkap</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">NISN</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tempat, Tanggal Lahir</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">NIK</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">No. KK</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Alamat</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Alamat Ortu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tahun Lahir Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pendidikan Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pekerjaan Ayah</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Nama Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Tahun Lahir Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pendidikan Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Pekerjaan Ibu</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">No. Telepon</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Kelulusan</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Email</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700">Action</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700 ">Foto Murid</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >Nama Lengkap</th>
+              <th className="py-1  px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >NISN</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >Tempat, Tanggal Lahir</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >NIK</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">No. KK</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Alamat</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Alamat Ortu</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Nama Ayah</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Tahun Lahir Ayah</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pendidikan Ayah</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pekerjaan Ayah</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Nama Ibu</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Tahun Lahir Ibu</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pendidikan Ibu</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pekerjaan Ibu</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">No. Telepon</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Kelulusan</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Status Pembayaran</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Email</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Action</th>
             </tr>
           </thead>
           <tbody>
             {currentItems.length > 0 ? (
               currentItems.map((data) => (
                 <tr key={data.id}>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                  <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
                     <img src={`http://localhost:5001/uploads/${data.fotoMurid}`} alt="foto" style={{ width: '30px', height: '30px' }} />
                   </td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nama}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nisn}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.ttl}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.nik}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.noKK}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.alamat}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.alamatOrtu}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.namaAyah}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.tahunLahirAyah}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pendidikanAyah}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pekerjaanAyah}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.namaIbu}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.tahunLahirIbu}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pendidikanIbu}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.pekerjaanIbu}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.noTelp}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">
-                    {data.Kelulusan?.statusKelulusan ? "Lulus" : "Tidak Lulus"}
-
-                  </td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">{data.email}</td>
-                  <td className="py-3 px-4 border-b text-sm text-gray-700">
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nama}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nisn}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.ttl}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nik}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.noKK}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.alamat}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.alamatOrtu}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.namaAyah}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.tahunLahirAyah}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pendidikanAyah}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pekerjaanAyah}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.namaIbu}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.tahunLahirIbu}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pendidikanIbu}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pekerjaanIbu}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.noTelp}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.Kelulusan ? (data.Kelulusan.statusKelulusan ? "Lulus" : "Tidak Lulus") : "Belum Diproses"}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.isPaid ? "Paid" : "Unpaid"}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.email}</td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                       <Link to={`edit/${data.id}`} className="text-blue-600 hover:underline">Edit</Link>
                       <Button
