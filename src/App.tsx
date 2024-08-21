@@ -19,9 +19,6 @@ const App = () => {
   const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
-
-
-const App = () => {
   useEffect(() => {
     const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
     const clientKey = "SB-Mid-client-xwt7dO0ikf2dVydv";
@@ -32,7 +29,6 @@ const App = () => {
 
     document.body.appendChild(script);
   }, []);
-}
   return (
     <div>
       <BrowserRouter>

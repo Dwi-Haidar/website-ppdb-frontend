@@ -114,6 +114,7 @@ const PpdbDataTable: React.FC = () => {
                   <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
                     <img src={`http://localhost:5001/uploads/${data.fotoMurid}`} alt="foto" style={{ width: '30px', height: '30px' }} />
                   </td>
+
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nama}</td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nisn}</td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.ttl}</td>

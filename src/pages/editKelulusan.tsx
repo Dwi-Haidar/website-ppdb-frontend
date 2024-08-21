@@ -90,7 +90,7 @@ const EditKelulusan: React.FC = () => {
       {data ? (
         <Card elevation={3}>
           <CardHeader
-            avatar={<Avatar sx={{ bgcolor: blue[500] }}>{data.nama.charAt(0)}</Avatar>}
+            avatar={<Avatar sx={{ bgcolor: blue[500] }} src={`http://localhost:5001/uploads/${data.fotoMurid}`}></Avatar>}
             title={data.nama}
             subheader={`NISN: ${data.nisn}`}
             titleTypographyProps={{ variant: 'h6' }}
