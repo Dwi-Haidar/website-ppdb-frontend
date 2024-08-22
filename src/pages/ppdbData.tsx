@@ -159,7 +159,7 @@ const PpdbDataTable: React.FC = () => {
                 <tr key={data.id}>
                   <td className="py-3 px-4 border-b text-sm text-gray-700">
                     <img
-                      src={`http://localhost:5001/uploads/${data.image[0].url}`}
+                      // src={`http://localhost:5001/uploads/${data.image[0].url}`}
                       alt="foto"
                       style={{ width: "30px", height: "30px" }}
                     />
