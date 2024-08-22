@@ -2,8 +2,8 @@
 export interface EskulData {
   id: number;
   name: string;
-  description: string;
-  image: string;
+  Article: string;
+  fotoEktra: string;
 }
 
 export interface IPpdbImage {
@@ -45,4 +45,13 @@ export interface PpdbData {
   fotoMurid: string;
   image: IPpdbImage[];
   Kelulusan?: Kelulusan;
+}
+
+export interface IBerita {
+  id: number;
+  name: string;
+  fotoBerita: string;
+  Article: string;
+  createdAt: Date;
+  updatedAt: string;
 }

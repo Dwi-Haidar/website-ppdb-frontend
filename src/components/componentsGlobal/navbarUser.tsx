@@ -34,12 +34,12 @@ const NavbarUser: React.FC = () => {
         </Box>
         <div className="hidden md:flex gap-8 items-center " style={{ fontSize: "16px", fontWeight: 500 }}>
           <a href="/" className="hover:text-green-800">Home</a>
-          <a>Berita </a>
-          <a href="/about" className="hover:text-green-800">About</a>
-          <a href="/ppdb-online" className="hover:text-green-800">ppdb-online</a>
+          <a href='/berita' className='hover:text-green-800'>Berita </a>
+          <a href="/about" className="hover:text-green-800">Pofile</a>
+          <a href="/ppdb-online" className="hover:text-green-800">ekstrakurikuler</a>
           <a href="/ppdb-ofline" className="hover:text-green-800">ppdb-offline</a>
-          <a href="/pengumuman" className="hover:text-green-800">pengumuman</a>
-          {/* <a href="/login" className="hover:text-gray-400  text-[black] font-bold">Login</a> */}
+          <a href="/pengumuman" className="hover:text-green-800">Prestasi</a>
+          <a href="/login" className="hover:text-gray-400  text-[black] font-bold">Login</a>
         </div>
         <div className="md:hidden">
           <button

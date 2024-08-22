@@ -1,8 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, FormControl, FormControlLabel, Radio, RadioGroup, Button, Grid, Container, Card, CardContent, CardHeader, Avatar, Modal } from '@mui/material';
-import { PpdbData } from '../types/types';
+import { Box, Typography, FormControl, FormControlLabel, Radio, RadioGroup, Button, Paper, Grid, Container, Card, CardContent, CardHeader, Avatar, Modal } from '@mui/material';
+import { blue } from '@mui/material/colors';
+import { IPpdbImage } from '../types/types';
 import API from '../libs';
+
+interface Kelulusan {
+  id: number;
+  createdAt: string;
+  ppdbId: number;
+  statusKelulusan: boolean;
+  updatedAt: string;
+}
+
+interface PpdbData {
+  id: number;
+  nama: string;
+  nisn: string;
+  ttl: string;
+  nik: string;
+  noKK: string;
+  alamat: string;
+  alamatOrtu: string;
+  namaAyah: string;
+  tahunLahirAyah: string;
+  pendidikanAyah: string;
+  pekerjaanAyah: string;
+  namaIbu: string;
+  tahunLahirIbu: string;
+  pendidikanIbu: string;
+  pekerjaanIbu: string;
+  noTelp: string;
+  isPaid: boolean;
+  createdAt: string;
+  updatedAt: string;
+  image: IPpdbImage[];
+  Kelulusan?: Kelulusan;
+}
 
 const EditKelulusan: React.FC = () => {
   const [data, setData] = useState<PpdbData | null>(null);
@@ -56,7 +90,7 @@ const EditKelulusan: React.FC = () => {
       {data ? (
         <Card elevation={3}>
           <CardHeader
-            avatar={<Avatar src={`http://localhost:5001/uploads/${data.fotoMurid}`} sx={{ bgcolor: "#73ee11", objectFit: 'fill' }}></Avatar>}
+            avatar={<Avatar sx={{ bgcolor: blue[500] }} src={`http://localhost:5001/uploads/${data.fotoMurid}`}></Avatar>}
             title={data.nama}
             subheader={`NISN: ${data.nisn}`}
             titleTypographyProps={{ variant: 'h6' }}
