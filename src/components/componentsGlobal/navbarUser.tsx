@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Logo from "../../assets/image/logosekolah.png"
 import { Link } from 'react-router-dom';
+import { Box } from '@mui/material';
 
 const NavbarUser: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -27,14 +28,17 @@ const NavbarUser: React.FC = () => {
       className={`${bgColor} ${textColor} p-4 md:px-9 lg:px-14 transition-all duration-300`}
     >
       <div className="container mx-auto flex justify-between items-center">
-        <img src={Logo} alt="logo" className='w-[44px]' />
-        <div className="hidden md:flex gap-8 items-center">
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <img src={Logo} alt="logo" className='w-[44px]' />
+          <a style={{ fontSize: "16px", fontWeight: 500 }}>SMP Islam Karya Mukti</a>
+        </Box>
+        <div className="hidden md:flex gap-8 items-center " style={{ fontSize: "16px", fontWeight: 500 }}>
           <a href="/" className="hover:text-green-800">Home</a>
-          <a href="/about" className="hover:text-green-800">About</a>
+          <a href='/berita' className='hover:text-green-800'>Berita </a>
+          <a href="/about" className="hover:text-green-800">Pofile</a>
           <a href="/ppdb-online" className="hover:text-green-800">ppdb-online</a>
           <a href="/ppdb-ofline" className="hover:text-green-800">ppdb-offline</a>
-          <a href="/pengumuman" className="hover:text-green-800">pengumuman</a>
-          <div>||</div>
+          <a href="/pengumuman" className="hover:text-green-800">Prestasi</a>
           <a href="/login" className="hover:text-gray-400  text-[black] font-bold">Login</a>
         </div>
         <div className="md:hidden">

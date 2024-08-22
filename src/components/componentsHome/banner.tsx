@@ -2,7 +2,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Img1 from "../../assets/image/a.png"
-import Img2 from "../../assets/image/s.png"
+import Img2 from "../../assets/image/bannernew.png"
 
 
 const settings = {

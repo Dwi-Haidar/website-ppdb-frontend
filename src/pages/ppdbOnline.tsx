@@ -44,7 +44,10 @@ const PpdbOnline = () => {
     noTelp: "",
   });
 
-  const [images, setImages] = useState<FileList | null>(null);
+  const [images, setImages] = useState<{ [key: string]: File[] }>({
+    fotoMurid: [],
+    otherImages: [],
+  });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -54,7 +57,13 @@ const PpdbOnline = () => {
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setImages(e.target.files);
+    const { name, files } = e.target;
+    if (files) {
+      setImages((prev) => ({
+        ...prev,
+        [name]: Array.from(files),
+      }));
+    }
   };
 
   const validateForm = () => {
@@ -101,22 +110,21 @@ const PpdbOnline = () => {
       data.append(key, formData[key as keyof FormData]);
     }
 
-    if (images) {
-      for (let i = 0; i < images.length; i++) {
-        data.append("image", images[i]);
-      }
+    // Append the fotoMurid and other images
+    for (const file of images.fotoMurid) {
+      data.append("fotoMurid", file);
+    }
+
+    for (const file of images.otherImages) {
+      data.append("image", file);
     }
 
     try {
-      const response = await axios.post(
-        `${process.env.BACKEND_URL}/ppdb`,
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post("http://localhost:5001/ppdb", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.data.status) {
         toast.success("Data berhasil dikirim.");
@@ -161,6 +169,7 @@ const PpdbOnline = () => {
       <h1 className="text-2xl font-bold mb-6">Pendaftaran Online</h1>
       <form onSubmit={handleSubmit} noValidate>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Existing form fields */}
           {[
             { label: "Nama", name: "nama", type: "text" },
             { label: "Email", name: "email", type: "email" },
@@ -200,75 +209,44 @@ const PpdbOnline = () => {
           ))}
           <div className="mb-4">
             <label
+              htmlFor="fotoMurid"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Foto Murid
+            </label>
+            <input
+              type="file"
+              id="fotoMurid"
+              name="fotoMurid"
+              onChange={handleFileChange}
+              multiple
+              className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
+            />
+          </div>
+          <div className="mb-4">
+            <label
               htmlFor="file1"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Foto SKL
+              Foto Berkas Murid
             </label>
             <input
               type="file"
               id="file1"
-              name="file1"
+              name="otherImages"
+              placeholder="Tolong masukan Foto Izajah, Akte Kelahiran, SKL, KK"
               onChange={handleFileChange}
               multiple
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
             />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="file2"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Foto Kartu Keluarga
-            </label>
-            <input
-              type="file"
-              id="file2"
-              name="file2"
-              onChange={handleFileChange}
-              multiple
-              className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="file3"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Upload Akte Kelahiran
-            </label>
-            <input
-              type="file"
-              id="file3"
-              name="file3"
-              onChange={handleFileChange}
-              multiple
-              className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="file4"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Foto Ijazah
-            </label>
-            <input
-              type="file"
-              id="file4"
-              name="file4"
-              onChange={handleFileChange}
-              multiple
-              className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Kirim
-          </button>
         </div>
+        <button
+          type="submit"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+        >
+          Kirim
+        </button>
       </form>
       <ToastContainer />
     </div>

@@ -11,6 +11,10 @@ import PpdbOfline from "./pages/ppdbOfline";
 import Pengumuman from "./pages/pengumuman";
 import DataPpdbEdit from "./pages/editKelulusan";
 import { useEffect } from "react";
+import DataKelulusan from "./pages/dataKelulusan";
+import ProfileSekolah from "./pages/profileSekolah";
+import Berita from "./pages/berita";
+import AlurppdbOnline from "./pages/alurppdb-online";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("authToken");
@@ -28,7 +32,6 @@ const App = () => {
 
     document.body.appendChild(script);
   }, []);
-
   return (
     <div>
       <BrowserRouter>
@@ -38,9 +41,12 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="login" element={<Login />} />
-            <Route path="ppdb-online" element={<PpdbOnline />} />
+            <Route path="ppdb-online" element={<AlurppdbOnline />} />
+            <Route path="ppdbonline" element={<PpdbOnline />} />
             <Route path="ppdb-ofline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
+            <Route path="profile" element={<ProfileSekolah />} />
+            <Route path="berita" element={<Berita />} />
             {/* <Route path="artikel" element={<ArticlesPage />} /> */}
           </Route>
 
@@ -55,6 +61,7 @@ const App = () => {
           >
             <Route index element={<Dashboard />} />
             <Route path="ppdb-data" element={<DataPpdb />} />
+            <Route path="ppdb-kelulusan" element={<DataKelulusan />} />
             <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />
           </Route>
         </Routes>

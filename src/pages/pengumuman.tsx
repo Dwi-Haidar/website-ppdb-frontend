@@ -1,37 +1,27 @@
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
-
-// Tipe data untuk PPDB
-interface PPDBData {
-  id: number;
-  statusKelulusan: boolean;
-  ppdb: {
-    nama: string;
-    nisn: string;
-    ttl: string;
-    alamat: string;
-  };
-}
+import { Kelulusan } from "../types/types";
+import API from "../libs";
 
 const Pengumuman: React.FC = () => {
-  const [data, setData] = useState<PPDBData[]>([]);
+  const [data, setData] = useState<Kelulusan[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
   const itemsPerPage = 5;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5001/kelulusan");
-        setData(response.data);
-        setTotalItems(response.data.length);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const getDataKelulusan = async () => {
+    try {
+      const response = await API.get("kelulusan");
+      setData(response.data);
+      setTotalItems(response.data.length);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+
+    getDataKelulusan();
   }, []);
 
   const currentItems = data.slice(
