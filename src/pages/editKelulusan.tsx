@@ -36,6 +36,7 @@ interface PpdbData {
   ttl: string;
   nik: string;
   noKK: string;
+  fotoMurid: string;
   alamat: string;
   alamatOrtu: string;
   namaAyah: string;
