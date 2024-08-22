@@ -15,6 +15,7 @@ import DataKelulusan from "./pages/dataKelulusan";
 import ProfileSekolah from "./pages/profileSekolah";
 import Berita from "./pages/berita";
 import AlurppdbOnline from "./pages/alurppdb-online";
+import PaymentInstructions from "./pages/payment-instructions";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("authToken");
@@ -43,6 +44,10 @@ const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="ppdb-online" element={<AlurppdbOnline />} />
             <Route path="ppdbonline" element={<PpdbOnline />} />
+            <Route
+              path="/payment-instructions"
+              element={<PaymentInstructions />}
+            />
             <Route path="ppdb-ofline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
             <Route path="profile" element={<ProfileSekolah />} />
