@@ -32,6 +32,7 @@ interface PpdbData {
   pekerjaanIbu: string;
   noTelp: string;
   isPaid: boolean;
+  fotoMurid: string;
   createdAt: string;
   updatedAt: string;
   image: IPpdbImage[];
