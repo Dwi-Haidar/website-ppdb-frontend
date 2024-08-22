@@ -1,6 +1,6 @@
-// components/componentsHome/CardEskul.tsx
+
 import { Link } from "react-router-dom";
-import { EskulData } from "../../types/types";
+
 
 interface CardEskulProps {
   name: string;

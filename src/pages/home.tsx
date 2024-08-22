@@ -4,14 +4,7 @@ import { useInView } from "react-intersection-observer";
 import Banner from "../components/componentsHome/banner";
 import CardEskul from "../components/componentsHome/cardEskul";
 import { EskulData } from "../types/types";
-import Img1 from "../assets/image/futsal.jpeg";
-import Marawis from "../assets/image/rebana.jpeg";
-import Pmr from "../assets/image/pmr.jpeg";
-import Pramuk from "../assets/image/Pramuka.jpeg";
-import takewnd from "../assets/image/tkdn.jpeg";
-import paskib from "../assets/image/paskibra.jpeg";
 import AboutUs from "../components/componentsHome/AboutUs";
-import Galeri from "../components/componentsHome/galeri";
 import API from "../libs";
 
 const Home: React.FC = () => {
