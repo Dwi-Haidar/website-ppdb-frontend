@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Banner from "../components/componentsHome/banner";
@@ -12,48 +12,23 @@ import takewnd from "../assets/image/tkdn.jpeg";
 import paskib from "../assets/image/paskibra.jpeg";
 import AboutUs from "../components/componentsHome/AboutUs";
 import Galeri from "../components/componentsHome/galeri";
+import API from "../libs";
 
 const Home: React.FC = () => {
-  const eskulData: EskulData[] = [
-    {
-      id: 1,
-      name: "Futsal",
-      description: "Raih kemenangan dan kesehatan dengan bermain futsal bersama kami!",
-      image: Img1,
-    },
-    {
-      id: 2,
-      name: "Marawis",
-      description: "Latihan dan pertunjukan Marawis untuk melestarikan seni musik tradisional dan meningkatkan keterampilan musikal.",
-      image: Marawis,
-    },
-    {
-      id: 3,
-      name: "PMR",
-      description: "Pelatihan dan kegiatan Palang Merah Remaja (PMR) untuk meningkatkan keterampilan pertolongan pertama dan kepedulian sosial.",
-      image: Pmr,
-    },
-    {
-      id: 4,
-      name: "Pramuka",
-      description: "Aktivitas dan pelatihan Pramuka untuk membangun karakter, kepemimpinan, dan keterampilan outdoor.",
-      image: Pramuk,
-    },
-    {
-      id: 5,
-      name: "Paskibra",
-      description: "Latihan dan persiapan Paskibra untuk meningkatkan keterampilan baris-berbaris dan disiplin.",
-      image: paskib,
-    },
-    {
-      id: 6,
-      name: "Taekwondo",
-      description: "Pelatihan Taekwondo untuk meningkatkan keterampilan bela diri, kekuatan fisik, dan disiplin diri.",
-      image: takewnd,
-    },
-  ];
+  const [eskul, setEskul] = React.useState<EskulData[]>([]);
 
+  const getEskul = async () => {
+    try {
+      const res = await API.get('exktrakulikuler');
+      setEskul(res.data.data);
+    } catch (error) {
+      console.log('Error fetching data:', error);
+    }
+  }
 
+  useEffect(() => {
+    getEskul();
+  }, [])
   const aboutUsControls = useAnimation();
   const galeriControls = useAnimation();
   const eskulControls = useAnimation();
@@ -109,7 +84,7 @@ const Home: React.FC = () => {
         }}
         transition={{ duration: 1.5, delay: 0.5 }}
       >
-        <Galeri />
+        {/* <Galeri /> */}
       </motion.div>
 
       <motion.div
@@ -137,8 +112,11 @@ const Home: React.FC = () => {
         }}
         transition={{ duration: 1.5, delay: 0.2 }}
       >
-        {eskulData.map((item) => (
-          <CardEskul key={item.id} eskul={item} />
+        {eskul.slice(0, 6).map((eskul) => (
+          <CardEskul key={eskul.id}
+            Article={eskul.Article}
+            name={eskul.name}
+            fotoEktra={`http://localhost:5001/uploads/${eskul.fotoEktra}`} />
         ))}
       </motion.div>
 
