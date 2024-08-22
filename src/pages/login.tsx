@@ -40,7 +40,7 @@ const Login: React.FC = () => {
 
       const data: { token: string } = await response.json();
       const { token } = data;
-      localStorage.setItem('authToken', token);
+      localStorage.setItem('token', token);
       navigate('/');
     } catch (err) {
       console.error((err as Error).message);
