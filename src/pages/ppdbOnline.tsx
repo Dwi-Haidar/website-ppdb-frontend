@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 interface FormData {
   nama: string;
   nisn: string;
-  email: string;
   ttl: string;
   nik: string;
   noKK: string;
@@ -27,7 +26,6 @@ const PpdbOnline = () => {
   const [formData, setFormData] = useState<FormData>({
     nama: "",
     nisn: "",
-    email: "",
     ttl: "",
     nik: "",
     noKK: "",
@@ -90,8 +88,6 @@ const PpdbOnline = () => {
       toast.error("No KK sudah terdaftar.");
     } else if (message.includes("NISN")) {
       toast.error("NISN sudah terdaftar.");
-    } else if (message.includes("Email")) {
-      toast.error("Email sudah terdaftar.");
     } else {
       toast.error(message);
     }
@@ -123,8 +119,11 @@ const PpdbOnline = () => {
       const response = await axios.post("http://localhost:5001/ppdb", data, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
       });
+      console.log("response", response.data);
+      console.log("response", response);
 
       if (response.data.status) {
         toast.success("Data berhasil dikirim.");
@@ -151,7 +150,9 @@ const PpdbOnline = () => {
       }
     } catch (error: any) {
       if (error.response) {
-        const message = error.response.data.message || "Terjadi kesalahan saat mengirim data.";
+        const message =
+          error.response.data.message ||
+          "Terjadi kesalahan saat mengirim data.";
         toast.error(message);
       } else if (error.request) {
         toast.error("Tidak ada respons dari server.");
@@ -170,7 +171,6 @@ const PpdbOnline = () => {
           {/* Existing form fields */}
           {[
             { label: "Nama", name: "nama", type: "text" },
-            { label: "Email", name: "email", type: "email" },
             { label: "NISN", name: "nisn", type: "text" },
             { label: "Tempat, Tanggal Lahir", name: "ttl", type: "date" },
             { label: "NIK", name: "nik", type: "text" },

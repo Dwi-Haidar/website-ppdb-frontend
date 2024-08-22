@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
-import { Box, Button, Card, IconButton, TextField, Typography } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
+import {
+  Box,
+  Button,
+  Card,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { PpdbData } from "../types/types";
 import API from "../libs";
 
 const PpdbDataTable: React.FC = () => {
   const [ppdbData, setPpdbData] = useState<PpdbData[]>([]);
-  const [searchnisn, setSearchnisn] = useState<string>('');
+  const [searchnisn, setSearchnisn] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 5;
@@ -16,32 +23,34 @@ const PpdbDataTable: React.FC = () => {
 
   const postEmail = async (emailToPost: string) => {
     try {
-      const res = await API.post('sendEmail', { email: emailToPost });
-      console.log('Email sent successfully:', res.data);
+      const res = await API.post("sendEmail", { email: emailToPost });
+      console.log("Email sent successfully:", res.data);
     } catch (error) {
-      console.error('Error sending email:', error);
-      setError('Error sending email. Please try again later.');
+      console.error("Error sending email:", error);
+      setError("Error sending email. Please try again later.");
     }
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await API.get<{ status: boolean; message: string; data: PpdbData[] }>(
-          'ppdb'
-        );
+        const response = await API.get<{
+          status: boolean;
+          message: string;
+          data: PpdbData[];
+        }>("ppdb");
 
         setPpdbData(response.data.data);
         setError(null);
       } catch (error) {
-        setError('Error fetching data. Please try again later.');
-        console.error('Error fetching data:', error);
+        setError("Error fetching data. Please try again later.");
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
   }, []);
 
-  const filteredData = ppdbData.filter(data =>
+  const filteredData = ppdbData.filter((data) =>
     data.nisn.toLowerCase().includes(searchnisn.toLowerCase())
   );
 
@@ -59,8 +68,19 @@ const PpdbDataTable: React.FC = () => {
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="overflow-x-auto w-[96%] mb-4">
-        <Card sx={{ width: '100%', maxWidth: 400, padding: 3, boxShadow: 3, borderRadius: 2, mb: 4 }}>
-          <Typography variant="h6" mb={2}>Cari Data Siswa Berdasarkan NISN</Typography>
+        <Card
+          sx={{
+            width: "100%",
+            maxWidth: 400,
+            padding: 3,
+            boxShadow: 3,
+            borderRadius: 2,
+            mb: 4,
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Cari Data Siswa Berdasarkan NISN
+          </Typography>
           <TextField
             label="Masukkan NISN"
             variant="outlined"
@@ -75,36 +95,78 @@ const PpdbDataTable: React.FC = () => {
               ),
             }}
             sx={{
-              width: '100%',
-              backgroundColor: '#f5f5f5',
+              width: "100%",
+              backgroundColor: "#f5f5f5",
               borderRadius: 2,
             }}
           />
         </Card>
         <table className="min-w-full bg-white shadow-md rounded-lg border border-black-200">
-          <thead >
+          <thead>
             <tr>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700 ">Foto Murid</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >Nama Lengkap</th>
-              <th className="py-1  px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >NISN</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >Tempat, Tanggal Lahir</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700" >NIK</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">No. KK</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Alamat</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Alamat Ortu</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Nama Ayah</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Tahun Lahir Ayah</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pendidikan Ayah</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pekerjaan Ayah</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Nama Ibu</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Tahun Lahir Ibu</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pendidikan Ibu</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Pekerjaan Ibu</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">No. Telepon</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Kelulusan</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Status Pembayaran</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Email</th>
-              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">Action</th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700 ">
+                Foto Murid
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Nama Lengkap
+              </th>
+              <th className="py-1  px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                NISN
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Tempat, Tanggal Lahir
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                NIK
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                No. KK
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Alamat
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Alamat Ortu
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Nama Ayah
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Tahun Lahir Ayah
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Pendidikan Ayah
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Pekerjaan Ayah
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Nama Ibu
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Tahun Lahir Ibu
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Pendidikan Ibu
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Pekerjaan Ibu
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                No. Telepon
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Kelulusan
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Status Pembayaran
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Email
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -112,45 +174,104 @@ const PpdbDataTable: React.FC = () => {
               currentItems.map((data) => (
                 <tr key={data.id}>
                   <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
-                    <img src={`http://localhost:5001/uploads/${data.fotoMurid}`} alt="foto" style={{ width: '30px', height: '30px' }} />
+                    <img
+                      src={`http://localhost:5001/uploads/${data.fotoMurid}`}
+                      alt="foto"
+                      style={{ width: "30px", height: "30px" }}
+                    />
                   </td>
 
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nama}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nisn}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.ttl}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.nik}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.noKK}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.alamat}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.alamatOrtu}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.namaAyah}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.tahunLahirAyah}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pendidikanAyah}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pekerjaanAyah}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.namaIbu}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.tahunLahirIbu}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pendidikanIbu}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.pekerjaanIbu}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.noTelp}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.Kelulusan ? (data.Kelulusan.statusKelulusan ? "Lulus" : "Tidak Lulus") : "Belum Diproses"}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.isPaid ? "Paid" : "Unpaid"}</td>
-                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">{data.email}</td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
-                    <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                      <Link to={`edit/${data.id}`} className="text-blue-600 hover:underline">Edit</Link>
+                    {data.nama}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.nisn}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.ttl}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.nik}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.noKK}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.alamat}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.alamatOrtu}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.namaAyah}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.tahunLahirAyah}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.pendidikanAyah}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.pekerjaanAyah}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.namaIbu}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.tahunLahirIbu}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.pendidikanIbu}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.pekerjaanIbu}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.noTelp}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.Kelulusan
+                      ? data.Kelulusan.statusKelulusan
+                        ? "Lulus"
+                        : "Tidak Lulus"
+                      : "Belum Diproses"}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.isPaid ? "Paid" : "Unpaid"}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.email}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        textAlign: "center",
+                      }}
+                    >
+                      <Link
+                        to={`edit/${data.id}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </Link>
                       <Button
-                        sx={{ fontSize: '11px', color: 'green' }}
+                        sx={{ fontSize: "11px", color: "green" }}
                         onClick={() => postEmail(data.email)}
                       >
                         Send Email
                       </Button>
                     </Box>
                   </td>
-
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={18} className="py-3 px-4 border-b text-sm text-gray-700 text-center">
+                <td
+                  colSpan={18}
+                  className="py-3 px-4 border-b text-sm text-gray-700 text-center"
+                >
                   Tidak ada data
                 </td>
               </tr>

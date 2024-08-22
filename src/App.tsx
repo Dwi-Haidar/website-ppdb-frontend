@@ -15,6 +15,7 @@ import DataKelulusan from "./pages/dataKelulusan";
 import ProfileSekolah from "./pages/profileSekolah";
 import Berita from "./pages/berita";
 import AlurppdbOnline from "./pages/alurppdb-online";
+import PaymentInstructions from "./pages/payment-instructions";
 import Register from "./pages/register";
 
 const App = () => {
@@ -44,6 +45,10 @@ const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="ppdb-online" element={<AlurppdbOnline />} />
             <Route path="ppdbonline" element={<PpdbOnline />} />
+            <Route
+              path="/payment-instructions"
+              element={<PaymentInstructions />}
+            />
             <Route path="ppdb-ofline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
             <Route path="profile" element={<ProfileSekolah />} />
@@ -65,7 +70,6 @@ const App = () => {
             <Route path="ppdb-data" element={<DataPpdb />} />
             <Route path="ppdb-kelulusan" element={<DataKelulusan />} />
             <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />
-
           </Route>
         </Routes>
       </BrowserRouter>
