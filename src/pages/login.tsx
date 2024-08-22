@@ -1,12 +1,18 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
+const dummyAdmin = {
+  email: "admin@gmail.com",
+  password: "admin123",
+};
+
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+
   const navigate = useNavigate();
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -14,13 +20,18 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (email === dummyAdmin.email && password === dummyAdmin.password) {
+      navigate("/admin");
+      return;
+    }
+
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
@@ -31,13 +42,15 @@ const Login: React.FC = () => {
       const { token } = data;
       localStorage.setItem("authToken", token);
       navigate("/admin");
+      localStorage.setItem("authToken", token);
+      navigate("/");
     } catch (err) {
       console.error((err as Error).message);
     }
   };
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,18 +63,17 @@ const Login: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">
           Login
         </h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-600">
-              Username
+            <label htmlFor="email" className="block text-gray-600">
+              email
             </label>
             <input
-              id="username"
+              id="email"
               type="text"
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
               placeholder="your username"
-              value={username}
+              value={email}
               onChange={handleUsernameChange}
               required
             />
@@ -96,6 +108,15 @@ const Login: React.FC = () => {
             Login
           </button>
         </form>
+        <p className="text-center mt-4">
+          Don't have an account?{" "}
+          <a
+            href="/register"
+            className="text-green-600 hover:text-green-800 transition duration-200"
+          >
+            Register
+          </a>
+        </p>
       </div>
     </div>
   );
