@@ -11,7 +11,6 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { useRef, useState } from "react";
 import axios from "axios";
 
-// Define valid Alert severity types
 type AlertSeverity = "success" | "info" | "warning" | "error";
 
 const PaymentInstructions = () => {
@@ -22,7 +21,6 @@ const PaymentInstructions = () => {
     useState<AlertSeverity>("success");
 
   const handleButtonClick = () => {
-    // Trigger the file input click
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -37,13 +35,13 @@ const PaymentInstructions = () => {
       formData.append("fotoBukti", file);
 
       try {
-        // Send the file to your backend
         const response = await axios.post(
           "http://localhost:5001/uploadBuktiPembayaran",
           formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
           }
         );
@@ -97,7 +95,6 @@ const PaymentInstructions = () => {
           >
             Unggah Bukti Pembayaran
           </Button>
-          {/* Hidden file input */}
           <input
             type="file"
             ref={fileInputRef}
@@ -107,7 +104,6 @@ const PaymentInstructions = () => {
         </Box>
       </Paper>
 
-      {/* Snackbar for success or error alert */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
