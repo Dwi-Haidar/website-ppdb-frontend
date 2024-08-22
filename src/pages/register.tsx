@@ -51,9 +51,9 @@ const Register: React.FC = () => {
                 <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Register</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="username" className="block text-gray-600">Username</label>
+                        <label htmlFor="email" className="block text-gray-600">email</label>
                         <input
-                            id="username"
+                            id="email"
                             type="text"
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md"
                             placeholder="your username"
@@ -90,8 +90,9 @@ const Register: React.FC = () => {
                         Register
                     </button>
                 </form>
+                <p className="text-center mt-4">Already have an account? <a href="/login" className="text-green-600 hover:text-green-800 transition duration-200">Login</a></p>
             </div>
-            <p className="text-center mt-4">Already have an account? <a href="/login" className="text-green-600 hover:text-green-800 transition duration-200">Login</a></p>
+
         </div>
     );
 };

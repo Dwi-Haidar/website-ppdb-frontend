@@ -61,9 +61,9 @@ const Login: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-600">Username</label>
+            <label htmlFor="email" className="block text-gray-600">email</label>
             <input
-              id="username"
+              id="email"
               type="text"
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
               placeholder="your username"
