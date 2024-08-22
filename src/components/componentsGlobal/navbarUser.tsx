@@ -36,7 +36,7 @@ const NavbarUser: React.FC = () => {
           <a href="/" className="hover:text-green-800">Home</a>
           <a href='/berita' className='hover:text-green-800'>Berita </a>
           <a href="/about" className="hover:text-green-800">Pofile</a>
-          <a href="/ppdb-online" className="hover:text-green-800">ekstrakurikuler</a>
+          <a href="/ppdb-online" className="hover:text-green-800">ppdb-online</a>
           <a href="/ppdb-ofline" className="hover:text-green-800">ppdb-offline</a>
           <a href="/pengumuman" className="hover:text-green-800">Prestasi</a>
           <a href="/login" className="hover:text-gray-400  text-[black] font-bold">Login</a>

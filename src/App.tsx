@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import DataKelulusan from "./pages/dataKelulusan";
 import ProfileSekolah from "./pages/profileSekolah";
 import Berita from "./pages/berita";
+import AlurppdbOnline from "./pages/alurppdb-online";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("authToken");
@@ -40,7 +41,8 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="login" element={<Login />} />
-            <Route path="ppdb-online" element={<PpdbOnline />} />
+            <Route path="ppdb-online" element={<AlurppdbOnline />} />
+            <Route path="ppdbonline" element={<PpdbOnline />} />
             <Route path="ppdb-ofline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
             <Route path="profile" element={<ProfileSekolah />} />
