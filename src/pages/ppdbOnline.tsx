@@ -1,7 +1,9 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload } from "./alurppdb-online";
 
 interface FormData {
   nama: string;
@@ -93,9 +95,37 @@ const PpdbOnline = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        try {
+          const decoded = jwtDecode<CustomJwtPayload>(token);
+          const userEmail = decoded.email;
+          if (userEmail) {
+            const response = await fetch(
+              `http://localhost:5001/ppdb?email=${userEmail}`
+            );
+            if (!response.ok) {
+              throw new Error("Failed to fetch user data");
+            }
+            const result = await response.json();
+            if (result.status === 200 && result.data.length > 0) {
+              const userData = result.data[0];
+              setFormData(userData);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
