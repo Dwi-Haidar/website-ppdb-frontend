@@ -10,6 +10,7 @@ import {
 import UploadIcon from "@mui/icons-material/Upload";
 import { useRef, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type AlertSeverity = "success" | "info" | "warning" | "error";
 
@@ -19,6 +20,7 @@ const PaymentInstructions = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] =
     useState<AlertSeverity>("success");
+  const navigate = useNavigate();
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
@@ -49,6 +51,7 @@ const PaymentInstructions = () => {
         if (response.status === 200) {
           setSnackbarMessage("Bukti pembayaran berhasil diunggah");
           setSnackbarSeverity("success");
+          setTimeout(() => navigate("/after-payment-instructions"), 1000);
         } else {
           setSnackbarMessage("Gagal mengunggah bukti pembayaran");
           setSnackbarSeverity("error");
