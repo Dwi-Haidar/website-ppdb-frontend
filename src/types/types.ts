@@ -39,10 +39,12 @@ export interface PpdbData {
   pekerjaanIbu: string;
   noTelp: string;
   isPaid: boolean;
+  isVerified: boolean;
   email: string;
   createdAt: string;
   updatedAt: string;
   fotoMurid: string;
+  fotoBukti: string;
   image: IPpdbImage[];
   Kelulusan?: Kelulusan;
 }

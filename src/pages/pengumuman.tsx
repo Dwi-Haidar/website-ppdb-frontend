@@ -39,25 +39,45 @@ const Pengumuman: React.FC = () => {
         <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
           <thead>
             <tr>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Status Kelulusan</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">Nama Lengkap</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">NISN</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">Tempat, Tanggal Lahir</th>
-              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">Alamat</th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">
+                Status Kelulusan
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[14%]">
+                Nama Lengkap
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[10%]">
+                NISN
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[20%]">
+                Tempat, Tanggal Lahir
+              </th>
+              <th className="py-3 px-4 bg-gray-100 border-b text-left text-sm font-medium text-gray-700 w-[22%]">
+                Alamat
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentItems.map((item) => (
               <tr key={item.id}>
                 <td
-                  className={`py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap ${item.statusKelulusan ? "text-green-500" : "text-red-500"}`}
+                  className={`py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap ${
+                    item.statusKelulusan ? "text-green-500" : "text-red-500"
+                  }`}
                 >
                   {item.statusKelulusan ? "Lulus" : "Belum Lulus"}
                 </td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.nama}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.nisn}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.ttl}</td>
-                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">{item.ppdb.alamat}</td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
+                  {item.ppdb.nama}
+                </td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
+                  {item.ppdb.nisn}
+                </td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
+                  {item.ppdb.ttl}
+                </td>
+                <td className="py-3 px-4 border-b text-sm text-gray-700 whitespace-nowrap">
+                  {item.ppdb.alamat}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -81,6 +101,6 @@ const Pengumuman: React.FC = () => {
       />
     </div>
   );
-}
+};
 
 export default Pengumuman;

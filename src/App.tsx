@@ -15,6 +15,7 @@ import DataKelulusan from "./pages/dataKelulusan";
 import ProfileSekolah from "./pages/profileSekolah";
 import Berita from "./pages/berita";
 import AlurppdbOnline from "./pages/alurppdb-online";
+import PaymentInstructions from "./pages/payment-instructions";
 import Register from "./pages/register";
 
 const App = () => {
@@ -41,17 +42,23 @@ const App = () => {
           <Route path="/" element={<Layouts />}>
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
-            <Route path="login" element={<Login />} />
+
             <Route path="ppdb-online" element={<AlurppdbOnline />} />
             <Route path="ppdbonline" element={<PpdbOnline />} />
-            <Route path="ppdb-ofline" element={<PpdbOfline />} />
+            <Route
+              path="/payment-instructions"
+              element={<PaymentInstructions />}
+            />
+
+            <Route path="ppdb-offline" element={<PpdbOfline />} />
             <Route path="pengumuman" element={<Pengumuman />} />
             <Route path="profile" element={<ProfileSekolah />} />
             <Route path="berita" element={<Berita />} />
-            <Route path="register" element={<Register />} />
+
             {/* <Route path="artikel" element={<ArticlesPage />} /> */}
           </Route>
-
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
           {/* Protected Routes */}
           <Route
             path="/admin"
@@ -65,7 +72,6 @@ const App = () => {
             <Route path="ppdb-data" element={<DataPpdb />} />
             <Route path="ppdb-kelulusan" element={<DataKelulusan />} />
             <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />
-
           </Route>
         </Routes>
       </BrowserRouter>
