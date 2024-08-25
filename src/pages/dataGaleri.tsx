@@ -105,7 +105,7 @@ const DataGaleri: React.FC = () => {
         try {
             if (editData.id) {
 
-                await API.put(`berita/${editData.id}`, formData, {
+                await API.put(`galeri/${editData.id}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -113,7 +113,7 @@ const DataGaleri: React.FC = () => {
                 toast.success('Data successfully updated!');
             } else {
 
-                await API.post("berita", formData, {
+                await API.post("galeri", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -125,7 +125,7 @@ const DataGaleri: React.FC = () => {
             setEditData({ id: null, name: "", Article: "", fotoGaleri: "" });
             setFile(null);
 
-            const response = await API.get("exktrakulikuler");
+            const response = await API.get("galeri");
             setNewsData(response.data.data);
         } catch (error) {
             console.error("Error posting or updating data:", error);

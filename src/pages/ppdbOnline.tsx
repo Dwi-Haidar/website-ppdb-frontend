@@ -19,6 +19,7 @@ interface FormData {
   pendidikanAyah: string;
   pekerjaanAyah: string;
   namaIbu: string;
+  tempat: string;
   tahunLahirIbu: string;
   pendidikanIbu: string;
   pekerjaanIbu: string;
@@ -42,6 +43,7 @@ const PpdbOnline = () => {
     pendidikanAyah: "",
     pekerjaanAyah: "",
     namaIbu: "",
+    tempat: "",
     tahunLahirIbu: "",
     pendidikanIbu: "",
     pekerjaanIbu: "",
@@ -160,6 +162,7 @@ const PpdbOnline = () => {
     });
 
     try {
+      console.log(data,'tes');
       const response = await axios.post("http://localhost:5001/ppdb", data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -187,6 +190,8 @@ const PpdbOnline = () => {
             alert("You closed the popup without finishing the payment.");
           },
         });
+        console.log(response.data.data);
+
       } else {
         handleValidationError(response.data.message);
       }
@@ -214,7 +219,8 @@ const PpdbOnline = () => {
           {[
             { label: "Nama", name: "nama", type: "text" },
             { label: "NISN", name: "nisn", type: "text" },
-            { label: "Tempat, Tanggal Lahir", name: "ttl", type: "date" },
+            { label: "Tempat", name: "tempat", type: "text" },
+            { label: "Tanggal Lahir", name: "ttl", type: "date", min: "2012-01-01" },
             { label: "NIK", name: "nik", type: "text" },
             { label: "No KK", name: "noKK", type: "text" },
             { label: "Alamat", name: "alamat", type: "text" },
@@ -293,6 +299,16 @@ const PpdbOnline = () => {
               <option value="Sarjana">Sarjana</option>
             </select>
           </div>
+          <input
+            type="text"
+            id="tempat"
+            name="tempat"
+            value={formData.tempat}
+            onChange={handleInputChange}
+            autoComplete="tempat"
+            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+          />
+
 
           {/* File input fields */}
           {[
