@@ -8,7 +8,7 @@ import LayoutsAdmin from "./layouts/layoutsAdmin";
 import Dashboard from "./pages/dashboard";
 import DataPpdb from "./pages/ppdbData";
 import PpdbOfline from "./pages/ppdbOfline";
-import Pengumuman from "./pages/pengumuman";
+import PrestasiPage from "./pages/PrestasiPage";
 import DataPpdbEdit from "./pages/editKelulusan";
 import { useEffect } from "react";
 import DataKelulusan from "./pages/dataKelulusan";
@@ -17,6 +17,13 @@ import Berita from "./pages/berita";
 import AlurppdbOnline from "./pages/alurppdb-online";
 import PaymentInstructions from "./pages/payment-instructions";
 import Register from "./pages/register";
+import AfterPaymentInstructions from "./pages/after-payment-instructions";
+import DataBerita from "./pages/dataBerita";
+import DataGaleri from "./pages/dataGaleri";
+import DataEktrakulikuler from "./pages/dataEktrakulikuler";
+import DetailPrestasi from "./pages/detailPrestasi";
+import DetailBerita from "./pages/detail-berita";
+import DataPrestasi from "./pages/data-prestasi";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("authToken");
@@ -49,11 +56,17 @@ const App = () => {
               path="/payment-instructions"
               element={<PaymentInstructions />}
             />
+            <Route
+              path="/after-payment-instructions"
+              element={<AfterPaymentInstructions />}
+            />
 
             <Route path="ppdb-offline" element={<PpdbOfline />} />
-            <Route path="pengumuman" element={<Pengumuman />} />
+            <Route path="prestasi" element={<PrestasiPage />} />
             <Route path="profile" element={<ProfileSekolah />} />
             <Route path="berita" element={<Berita />} />
+            <Route path="detail-prestasi/:id" element={<DetailPrestasi />} />
+            <Route path="detail-berita/:id" element={<DetailBerita />} />
 
             {/* <Route path="artikel" element={<ArticlesPage />} /> */}
           </Route>
@@ -72,6 +85,10 @@ const App = () => {
             <Route path="ppdb-data" element={<DataPpdb />} />
             <Route path="ppdb-kelulusan" element={<DataKelulusan />} />
             <Route path="ppdb-data/edit/:id" element={<DataPpdbEdit />} />
+            <Route path="ppdb-berita" element={<DataBerita />} />
+            <Route path="ppdb-galeri" element={<DataGaleri />} />
+            <Route path="ppdb-ekskul" element={<DataEktrakulikuler />} />
+            <Route path="ppdb-prestasi" element={<DataPrestasi />} />
           </Route>
         </Routes>
       </BrowserRouter>

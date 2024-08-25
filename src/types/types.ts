@@ -57,3 +57,27 @@ export interface IBerita {
   createdAt: Date;
   updatedAt: string;
 }
+export interface IGaleri {
+  id: number;
+  name: string;
+  fotoGaleri: string;
+  Article: string;
+  createdAt: Date;
+  updatedAt: string;
+}
+export interface IEktrakulikuler {
+  id: number;
+  name: string;
+  fotoEktra: string;
+  Article: string;
+  createdAt: Date;
+  updatedAt: string;
+}
+export interface IPrestasi {
+  id: number;
+  name: string;
+  fotoPrestasi: string;
+  Article: string;
+  createdAt: Date;
+  updatedAt: string;
+}

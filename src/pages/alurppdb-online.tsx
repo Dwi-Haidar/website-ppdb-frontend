@@ -13,7 +13,14 @@ import FormIcon from "@mui/icons-material/Description";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import SchoolIcon from "@mui/icons-material/School";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayload } from "jwt-decode";
+
+export interface CustomJwtPayload extends JwtPayload {
+  id?: number;
+  email?: string;
+}
 
 const steps = [
   {
@@ -44,17 +51,36 @@ const steps = [
 ];
 
 const AlurppdbOnline = () => {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
+  const navigate = useNavigate();
+  const [data, setData] = useState(null);
+  const [email, setEmail] = useState("");
+  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const isLoggedIn = localStorage.getItem("authToken") !== null;
 
   useEffect(() => {
-    const checkLoginStatus = () => {
-      const token = localStorage.getItem("authToken");
-      setIsLoggedIn(!!token);
-    };
+    const token = localStorage.getItem("authToken");
 
-    checkLoginStatus();
+    if (token) {
+      try {
+        const decoded = jwtDecode<CustomJwtPayload>(token);
+
+        const userEmail = decoded.email;
+
+        if (userEmail) {
+          setEmail(userEmail);
+          fetch(`http://localhost:5001/ppdb?email=${userEmail}`)
+            .then((response) => response.json())
+            .then((data) => {
+              setData(data);
+              setIsVerified(data.data[0].isVerified || false);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    }
   }, []);
 
   const handleUploadClick = () => {
@@ -64,7 +90,9 @@ const AlurppdbOnline = () => {
       navigate("/login");
     }
   };
-
+  const handleIsiFolmulirClick = () => {
+    navigate("/ppdbonline");
+  };
   return (
     <Container sx={{ mt: 10 }}>
       <Paper elevation={3} sx={{ padding: 3, marginTop: 5 }}>
@@ -99,19 +127,30 @@ const AlurppdbOnline = () => {
           flexDirection="column"
           alignItems="center"
         >
-          <Typography variant="h6" gutterBottom>
-            Unggah Bukti Pembayaran dan Formulir
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUploadClick}
-          >
-            {isLoggedIn ? "Unggah Bukti Pembayaran" : "Harus Login Terlebih Dahulu"}
-          </Button>
-          <Button variant="contained" color="secondary" sx={{ mt: 2 }}>
-            Isi Formulir
-          </Button>
+          {!isVerified ? (
+            <>
+              <Typography variant="h6" gutterBottom>
+                Unggah Bukti Pembayaran dan Formulir
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleUploadClick}
+              >
+                {isLoggedIn ? "Unggah Bukti Pembayaran" : "Tolong  Login Terlebih Dahulu"}
+              </Button>
+            </>
+          ) : null}
+          {isVerified ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ mt: 2 }}
+              onClick={handleIsiFolmulirClick}
+            >
+              Isi Formulir
+            </Button>
+          ) : null}
         </Box>
       </Paper>
     </Container>

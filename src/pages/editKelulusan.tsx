@@ -8,16 +8,17 @@ import {
   Radio,
   RadioGroup,
   Button,
-  Paper,
-  Grid,
-  Container,
   Card,
   CardContent,
   CardHeader,
   Avatar,
   Modal,
+  Container,
+  Grid,
+  IconButton,
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
+import CloseIcon from '@mui/icons-material/Close';
 import { IPpdbImage } from "../types/types";
 import API from "../libs";
 
@@ -50,6 +51,10 @@ interface PpdbData {
   noTelp: string;
   isPaid: boolean;
   fotoBukti: string;
+  fotoKK: string;
+  fotoSKL: string;
+  fotoIjazah: string;
+  fotoAkta: string;
   createdAt: string;
   updatedAt: string;
   image: IPpdbImage[];
@@ -68,13 +73,13 @@ const EditKelulusan: React.FC = () => {
   const GetdetailKelulusan = async () => {
     try {
       const response = await API.get(`ppdb/${numericId}`);
-      console.log(response.data.data, 'ini resppon');
       setData(response.data.data);
       setIsVerified(response.data.data.isVerified);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
     GetdetailKelulusan();
   }, [numericId]);
@@ -82,6 +87,7 @@ const EditKelulusan: React.FC = () => {
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setKelulusan(event.target.value === "true");
   };
+
   const handleVerifiedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsVerified(event.target.value === "true");
   };
@@ -89,9 +95,9 @@ const EditKelulusan: React.FC = () => {
   const updatePpdb = async () => {
     try {
       await API.put(`ppdb/${numericId}`, {
-        isVerified, 
+        isVerified,
       });
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
     }
   };
@@ -103,14 +109,13 @@ const EditKelulusan: React.FC = () => {
         ppdbId: numericId,
         statusKelulusan: kelulusan,
       });
-  
+
       await updatePpdb();
       GetdetailKelulusan();
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
     }
   };
-  ;
 
   const handleImageClick = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -123,223 +128,128 @@ const EditKelulusan: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ paddingY: 4 }}>
+    <Container maxWidth="lg" sx={{ paddingY: 4 }}>
       {data ? (
-        <Card elevation={3}>
+        <Card elevation={4} sx={{ borderRadius: 2 }}>
           <CardHeader
             avatar={
               <Avatar
-                sx={{ bgcolor: blue[500] }}
+                sx={{ bgcolor: blue[500], width: 56, height: 56 }}
                 src={`http://localhost:5001/uploads/${data.fotoMurid}`}
-              ></Avatar>
+              />
             }
             title={data.nama}
             subheader={`NISN: ${data.nisn}`}
             titleTypographyProps={{ variant: "h6" }}
-            subheaderTypographyProps={{ variant: "body1", color: "white" }}
-            sx={{ backgroundColor: "#73ee11", color: "white" }}
+            subheaderTypographyProps={{ variant: "body2" }}
+            sx={{ backgroundColor: "#56b475", color: "white", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
           />
           <CardContent>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h5" gutterBottom>
               Informasi Data
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  TTL:
-                </Typography>
-                <Typography variant="body2">{data.ttl}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  NIK:
-                </Typography>
-                <Typography variant="body2">{data.nik}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  No KK:
-                </Typography>
-                <Typography variant="body2">{data.noKK}</Typography>
-              </Grid>
+              {[
+                { label: "TTL", value: data.ttl },
+                { label: "NIK", value: data.nik },
+                { label: "No KK", value: data.noKK },
+                { label: "Alamat", value: data.alamat },
+                { label: "Alamat Ortu", value: data.alamatOrtu },
+                { label: "Nama Ayah", value: data.namaAyah },
+                { label: "Tahun Lahir Ayah", value: data.tahunLahirAyah },
+                { label: "Pendidikan Ayah", value: data.pendidikanAyah },
+                { label: "Pekerjaan Ayah", value: data.pekerjaanAyah },
+                { label: "Nama Ibu", value: data.namaIbu },
+                { label: "Tahun Lahir Ibu", value: data.tahunLahirIbu },
+                { label: "Pendidikan Ibu", value: data.pendidikanIbu },
+                { label: "Pekerjaan Ibu", value: data.pekerjaanIbu },
+                { label: "No Telp", value: data.noTelp },
+              ].map((item, index) => (
+                <Grid item xs={12} md={6} key={index}>
+                  <Typography variant="body1" color="textSecondary" sx={{ fontWeight: 600 }}>
+                    {item.label}:
+                  </Typography>
+                  <Typography variant="body2">{item.value}</Typography>
+                </Grid>
+              ))}
               <Grid item xs={12}>
-                <Typography variant="body1" color="textSecondary">
-                  Alamat:
+                <Typography variant="body1" color="textSecondary" sx={{ fontWeight: 600 }}>
+                  Foto Bukti Pembayaran:
                 </Typography>
-                <Typography variant="body2">{data.alamat}</Typography>
+                <img
+                  src={`http://localhost:5001/uploads/${data.fotoBukti}`}
+                  alt="Foto Bukti Pembayaran"
+                  style={{ width: "150px", height: "auto", borderRadius: "8px", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" }}
+                />
               </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1" color="textSecondary">
-                  Alamat Ortu:
-                </Typography>
-                <Typography variant="body2">{data.alamatOrtu}</Typography>
-              </Grid>
-              {/* Informasi Orang Tua */}
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Nama Ayah:
-                </Typography>
-                <Typography variant="body2">{data.namaAyah}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Tahun Lahir Ayah:
-                </Typography>
-                <Typography variant="body2">{data.tahunLahirAyah}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Pendidikan Ayah:
-                </Typography>
-                <Typography variant="body2">{data.pendidikanAyah}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Pekerjaan Ayah:
-                </Typography>
-                <Typography variant="body2">{data.pekerjaanAyah}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Nama Ibu:
-                </Typography>
-                <Typography variant="body2">{data.namaIbu}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Tahun Lahir Ibu:
-                </Typography>
-                <Typography variant="body2">{data.tahunLahirIbu}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Pendidikan Ibu:
-                </Typography>
-                <Typography variant="body2">{data.pendidikanIbu}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  Pekerjaan Ibu:
-                </Typography>
-                <Typography variant="body2">{data.pekerjaanIbu}</Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="body1" color="textSecondary">
-                  No Telp:
-                </Typography>
-                <Typography variant="body2">{data.noTelp}</Typography>
-              </Grid>
-              <Box>
-                <Typography>foto bukti pembayaran </Typography>
-                <img src={`http://localhost:5001/uploads/${data.fotoBukti}`} alt="foto Bukti" style={{ width: "100px", height: "auto" }} />
-              </Box>
-              <Grid item xs={12} md={6}>
-                <Typography>Berkas Murid</Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {data.image.map((img, index) => (
-                    <img
-                      key={index}
-                      src={`http://localhost:5001/uploads/${img.url}`}
-                      alt={`berkas murid ${index + 1}`}
-                      style={{
-                        width: "20%",
-                        height: "auto",
-                        cursor: "pointer",
-                      }}
-                      onClick={() =>
-                        handleImageClick(
-                          `http://localhost:5001/uploads/${img.url}`
-                        )
-                      }
-                    />
-
-                  ))}
-
-                </Box>
-              </Grid>
+              {[
+                { label: "KK", value: data.fotoKK },
+                { label: "SKL", value: data.fotoSKL },
+                { label: "Ijazah", value: data.fotoIjazah },
+                { label: "Akta", value: data.fotoAkta },
+              ].map((item, index) => (
+                <Grid item xs={12} md={6} key={index}>
+                  <Typography variant="body1" color="textSecondary" sx={{ fontWeight: 600 }}>
+                    Foto {item.label}:
+                  </Typography>
+                  <img
+                    src={`http://localhost:5001/uploads/${item.value}`}
+                    alt={`Foto ${item.label}`}
+                    style={{ width: "150px", height: "auto", borderRadius: "8px", cursor: "pointer", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" }}
+                    onClick={() => handleImageClick(item.value)}
+                  />
+                </Grid>
+              ))}
             </Grid>
-
-            <Box sx={{ marginTop: 4 }}>
+            <Box mt={3}>
               <Typography variant="h6" gutterBottom>
-                Status Kelulusan
+                Status Murid
               </Typography>
               <FormControl component="fieldset">
                 <RadioGroup
-                  aria-label="kelulusan"
-                  name="kelulusan"
-                  value={kelulusan.toString()}
+                  row
+                  aria-label="status"
+                  name="statusKelulusan"
+                  value={kelulusan ? "true" : "false"}
                   onChange={handleRadioChange}
-                  row
                 >
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio />}
-                    label="Diterima"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    control={<Radio />}
-                    label="Tidak Diterima"
-                  />
+                  <FormControlLabel value="true" control={<Radio />} label="Diterima" />
+                  <FormControlLabel value="false" control={<Radio />} label="Tidak  Diterima" />
                 </RadioGroup>
               </FormControl>
-            </Box>
-
-            <form
-              onSubmit={handleSubmit}
-              style={{ marginTop: 4, textAlign: "center" }}
-            >
-              <Button type="submit" variant="contained" color="primary">
-                Simpan Perubahan
-              </Button>
-            </form>
-            <Box sx={{ marginTop: 4 }}>
-              <Typography variant="h6" gutterBottom>
-                Status Verifikasi
+              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                Status Pembayaran
               </Typography>
               <FormControl component="fieldset">
                 <RadioGroup
-                  aria-label="verified"
-                  name="verified"
-                  value={isVerified.toString()}
-                  onChange={handleVerifiedChange}
                   row
+                  aria-label="verification"
+                  name="verificationStatus"
+                  value={isVerified ? "true" : "false"}
+                  onChange={handleVerifiedChange}
                 >
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio />}
-                    label="Terverifikasi"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    control={<Radio />}
-                    label="Belum Terverifikasi"
-                  />
+                  <FormControlLabel value="true" control={<Radio />} label="Sudah Bayar" />
+                  <FormControlLabel value="false" control={<Radio />} label="Belum Bayar" />
                 </RadioGroup>
               </FormControl>
-              <form
-                onSubmit={updatePpdb}
-                style={{ marginTop: 4, textAlign: "center" }}
-              >
-                <Button type="submit" variant="contained" color="primary">
-                  Simpan Perubahan
-                </Button>
-              </form>
             </Box>
-
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              sx={{ mt: 3 }}
+            >
+              Simpan
+            </Button>
           </CardContent>
         </Card>
       ) : (
-        <Typography>Loading...</Typography>
+        <Typography variant="h6" color="textSecondary">
+          Data tidak ditemukan
+        </Typography>
       )}
 
+      {/* Modal for Image Preview */}
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <Box
           sx={{
@@ -347,19 +257,27 @@ const EditKelulusan: React.FC = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "80%",
+            width: "90%",
+            maxWidth: "800px",
             bgcolor: "background.paper",
+            borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            outline: "none",
-            borderRadius: 2,
+            textAlign: "center",
+            overflow: "auto",
           }}
         >
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{ position: "absolute", top: 8, right: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
           {selectedImage && (
             <img
-              src={selectedImage}
-              alt="Preview"
-              style={{ width: "100%", height: "auto" }}
+              src={`http://localhost:5001/uploads/${selectedImage}`}
+              alt="Selected"
+              style={{ width: "100%", height: "auto", borderRadius: "8px" }}
             />
           )}
         </Box>

@@ -53,8 +53,21 @@ const NavbarAdmin: FC = () => {
               </li>
               <li className="flex items-center py-3 px-4 hover:bg-green-600 rounded transition-colors">
                 <FiFileText className="mr-2" />
-                <Link to="/admin/berita-sekolah">Berita Sekolah</Link>
+                <Link to="/admin/ppdb-berita">Berita Sekolah</Link>
               </li>
+              <li className="flex items-center py-3 px-4 hover:bg-green-600 rounded transition-colors">
+                <FiFileText className="mr-2" />
+                <Link to="/admin/ppdb-galeri">Galeri</Link>
+              </li>
+              <li className="flex items-center py-3 px-4 hover:bg-green-600 rounded transition-colors">
+                <FiFileText className="mr-2" />
+                <Link to="/admin/ppdb-ekskul">Ektrakulikuler</Link>
+              </li>
+              <li className="flex items-center py-3 px-4 hover:bg-green-600 rounded transition-colors">
+                <FiFileText className="mr-2" />
+                <Link to="/admin/ppdb-prestasi">Prestasi</Link>
+              </li>
+
             </ul>
           </nav>
         </div>

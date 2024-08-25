@@ -22,7 +22,7 @@ const Berita = () => {
     const beritaPerPage = 4;
     const [animateKey, setAnimateKey] = useState<number>(0);
 
-    
+
     const contentRef = useRef<HTMLDivElement>(null);
 
     const getBerita = async () => {
@@ -60,7 +60,7 @@ const Berita = () => {
         );
         setFilteredBerita(filtered);
         setCurrentPage(0);
-        setAnimateKey(prevKey => prevKey + 1); 
+        setAnimateKey(prevKey => prevKey + 1);
     };
 
     const handleDateChange = (newDate: Date) => {
@@ -69,7 +69,7 @@ const Berita = () => {
 
     const handlePageChange = useCallback((event: { selected: number }) => {
         setCurrentPage(event.selected);
-        setAnimateKey(prevKey => prevKey + 1); 
+        setAnimateKey(prevKey => prevKey + 1);
     }, []);
 
     const indexOfLastBerita = (currentPage + 1) * beritaPerPage;
@@ -89,7 +89,7 @@ const Berita = () => {
                     <Box display="flex" flexDirection="column" gap={3}>
                         {currentBerita.map((item) => (
                             <motion.div
-                                key={item.id + animateKey} 
+                                key={item.id + animateKey}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5 }}
@@ -99,6 +99,7 @@ const Berita = () => {
                                     fotoBerita={`http://localhost:5001/uploads/${item.fotoBerita}`}
                                     Article={item.Article}
                                     createdAt={item.createdAt}
+                                    id={item.id}
                                 />
                             </motion.div>
                         ))}

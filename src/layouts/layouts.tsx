@@ -18,7 +18,7 @@ const Layouts = () => {
         <Outlet />
       </div>
       {!isLoginPage && (
-        <div className="mt-10">
+        <div className="mt-0">
           <Footer />
         </div>
       )}

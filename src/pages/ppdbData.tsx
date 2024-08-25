@@ -68,39 +68,9 @@ const PpdbDataTable: React.FC = () => {
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="overflow-x-auto w-[96%] mb-4">
-        <Card
-          sx={{
-            width: "100%",
-            maxWidth: 400,
-            padding: 3,
-            boxShadow: 3,
-            borderRadius: 2,
-            mb: 4,
-          }}
-        >
-          <Typography variant="h6" mb={2}>
-            Cari Data Siswa Berdasarkan NISN
-          </Typography>
-          <TextField
-            label="Masukkan NISN"
-            variant="outlined"
-            size="small"
-            value={searchnisn}
-            onChange={(e) => setSearchnisn(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <IconButton edge="end" aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-              ),
-            }}
-            sx={{
-              width: "100%",
-              backgroundColor: "#f5f5f5",
-              borderRadius: 2,
-            }}
-          />
-        </Card>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Data Calon Siswa</Typography>
+        </Box>
         <table className="min-w-full bg-white shadow-md rounded-lg border border-black-200">
           <thead>
             <tr>
@@ -159,7 +129,7 @@ const PpdbDataTable: React.FC = () => {
                 No. Telepon
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
-                Kelulusan
+                Status Murid
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
                 Status Pembayaran
