@@ -299,15 +299,6 @@ const PpdbOnline = () => {
               <option value="Sarjana">Sarjana</option>
             </select>
           </div>
-          <input
-            type="text"
-            id="tempat"
-            name="tempat"
-            value={formData.tempat}
-            onChange={handleInputChange}
-            autoComplete="tempat"
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-          />
 
 
           {/* File input fields */}
