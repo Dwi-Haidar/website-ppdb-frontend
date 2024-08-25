@@ -10,6 +10,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // New state for error messages
 
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage(null); // Clear previous error message
 
     if (email === dummyAdmin.email && password === dummyAdmin.password) {
       navigate("/admin");
@@ -40,12 +42,13 @@ const Login: React.FC = () => {
 
       const data: { token: string } = await response.json();
       const { token } = data;
+      localStorage.setItem("email", email);
       localStorage.setItem("authToken", token);
       navigate("/admin");
-      
       localStorage.setItem("authToken", token);
       navigate("/");
     } catch (err) {
+      setErrorMessage("Email atau password salah. Silakan coba lagi."); // Set error message
       console.error((err as Error).message);
     }
   };
@@ -65,15 +68,20 @@ const Login: React.FC = () => {
           Login
         </h2>
         <form onSubmit={handleSubmit}>
+          {errorMessage && (
+            <div className="mb-4 p-2 bg-red-100 text-red-700 border border-red-300 rounded">
+              {errorMessage}
+            </div>
+          )}
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-600">
-              email
+              Email
             </label>
             <input
               id="email"
               type="text"
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-              placeholder="your username"
+              placeholder="your email"
               value={email}
               onChange={handleUsernameChange}
               required

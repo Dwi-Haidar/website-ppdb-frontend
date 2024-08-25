@@ -111,7 +111,7 @@ const DataEktrakulikuler: React.FC = () => {
 
         try {
             if (editData.id) {
-                
+
                 await API.put(`exktrakulikuler/${editData.id}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -119,7 +119,7 @@ const DataEktrakulikuler: React.FC = () => {
                 });
                 toast.success('Data successfully updated!');
             } else {
-                
+
                 await API.post("exktrakulikuler", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -131,7 +131,7 @@ const DataEktrakulikuler: React.FC = () => {
             setOpenModal(false);
             setEditData({ id: null, name: "", Article: "", fotoEktra: "" });
             setFile(null);
-            
+
             const response = await API.get("exktrakulikuler");
             setNewsData(response.data.data);
         } catch (error) {
@@ -248,21 +248,23 @@ const DataEktrakulikuler: React.FC = () => {
                                     {moment(data.createdAt).format("DD MMMM YYYY")}
                                 </td>
                                 <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() => handleOpenEditModal(data)}
-                                        sx={{ mr: 1 }}
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => handleOpenConfirmModal(data.id)}
-                                    >
-                                        Hapus
-                                    </Button>
+                                    <Box sx={{ display: "flex", gap: 1, flexDirection: "column" }}>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => handleOpenEditModal(data)}
+                                            sx={{ mr: 1, backgroundColor: "#7afc2f" }}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => handleOpenConfirmModal(data.id)}
+                                            sx={{ mr: 1, backgroundColor: "blue" }}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Box>
                                 </td>
                             </tr>
                         ))}

@@ -113,17 +113,17 @@ const DataKelulusan: React.FC = () => {
                 </table>
             </div>
             <ReactPaginate
-                previousLabel={"Previous"}
-                nextLabel={"Next"}
-                breakLabel={"..."}
-                breakClassName={"break-me"}
-                pageCount={Math.ceil(filteredData.length / itemsPerPage)}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
+                pageCount={Math.ceil(kelulusanData.length / itemsPerPage)}
                 onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                activeClassName={"active"}
-                className="flex justify-center items-center space-x-2 text-gray-500 mt-4"
+                containerClassName="pagination flex justify-center"
+                pageClassName="page-item"
+                pageLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+                activeClassName="active"
+                activeLinkClassName="bg-blue-500 text-white"
+                previousClassName="previous-page"
+                nextClassName="next-page"
+                previousLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+                nextLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
             />
         </Box>
     );

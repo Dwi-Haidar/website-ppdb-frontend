@@ -2,7 +2,7 @@ import { Container, Typography, Paper, Box } from "@mui/material";
 
 const AfterPaymentInstructions = () => {
   return (
-    <Container sx={{ mt: 10 }}>
+    <Container sx={{ mt: 20, mb: 10 }}>
       <Paper elevation={3} sx={{ padding: 3, textAlign: "center" }}>
         <Typography variant="h4" gutterBottom>
           Terima Kasih!
