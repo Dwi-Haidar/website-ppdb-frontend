@@ -39,10 +39,12 @@ export interface PpdbData {
   pekerjaanIbu: string;
   noTelp: string;
   isPaid: boolean;
+  isVerified: boolean;
   email: string;
   createdAt: string;
   updatedAt: string;
   fotoMurid: string;
+  fotoBukti: string;
   image: IPpdbImage[];
   Kelulusan?: Kelulusan;
 }
@@ -51,6 +53,30 @@ export interface IBerita {
   id: number;
   name: string;
   fotoBerita: string;
+  Article: string;
+  createdAt: Date;
+  updatedAt: string;
+}
+export interface IGaleri {
+  id: number;
+  name: string;
+  fotoGaleri: string;
+  Article: string;
+  createdAt: Date;
+  updatedAt: string;
+}
+export interface IEktrakulikuler {
+  id: number;
+  name: string;
+  fotoEktra: string;
+  Article: string;
+  createdAt: Date;
+  updatedAt: string;
+}
+export interface IPrestasi {
+  id: number;
+  name: string;
+  fotoPrestasi: string;
   Article: string;
   createdAt: Date;
   updatedAt: string;

@@ -4,25 +4,26 @@ import { FaClock } from "react-icons/fa";
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
-interface CardBeritaProps {
-    id: number;
+interface CardprestasiProps {
+    id: string; 
     name: string;
-    fotoBerita: string;
+    fotoPrestasi: string;
     Article: string;
     createdAt: Date;
 }
 
 const MAX_ARTICLE_LENGTH = 150;
-const CardBerita: React.FC<CardBeritaProps> = ({ name, fotoBerita, Article, createdAt, id }) => {
+
+const Cardprestasi: React.FC<CardprestasiProps> = ({ id, name, fotoPrestasi, Article, createdAt }) => {
     const truncatedArticle = Article.length > MAX_ARTICLE_LENGTH
         ? `${Article.substring(0, MAX_ARTICLE_LENGTH)}...`
         : Article;
-    
+
     return (
-        <Box sx={{ display: 'flex', width: '90%', height: '200px', alignItems: 'stretch' }}>
+        <Box sx={{ display: 'flex', width: '90%', height: '200px', alignItems: 'stretch' }} >
             <CardMedia
                 component="img"
-                image={fotoBerita}
+                image={fotoPrestasi}
                 alt={name}
                 sx={{ objectFit: 'cover', width: "300px", height: "100%" }}
             />
@@ -35,7 +36,7 @@ const CardBerita: React.FC<CardBeritaProps> = ({ name, fotoBerita, Article, crea
                 </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Box display={"flex"} justifyContent="space-between" alignItems="center">
-                    <Link to={`/detail-berita/${id}`}>
+                    <Link to={`/detail-prestasi/${id}`}>
                         <Button variant="contained" color="primary">Read More</Button>
                     </Link>
                     <Box display={"flex"} gap={1} alignItems={"center"}>
@@ -50,4 +51,4 @@ const CardBerita: React.FC<CardBeritaProps> = ({ name, fotoBerita, Article, crea
     );
 };
 
-export default CardBerita;
+export default Cardprestasi;

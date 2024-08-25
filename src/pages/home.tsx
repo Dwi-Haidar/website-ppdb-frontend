@@ -3,12 +3,15 @@ import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Banner from "../components/componentsHome/banner";
 import CardEskul from "../components/componentsHome/cardEskul";
-import { EskulData } from "../types/types";
+import { EskulData, IPrestasi } from "../types/types";
 import AboutUs from "../components/componentsHome/AboutUs";
 import API from "../libs";
+import Prestasicard from "../components/componentsHome/prestasi-card";
+import { Typography } from "@mui/material";
 
 const Home: React.FC = () => {
   const [eskul, setEskul] = React.useState<EskulData[]>([]);
+  const [prestasi, setPrestasi] = React.useState<IPrestasi[]>([]);
 
   const getEskul = async () => {
     try {
@@ -19,8 +22,17 @@ const Home: React.FC = () => {
     }
   }
 
+  const getPrestasi = async () => {
+    try {
+      const res = await API.get('prestasi');
+      setPrestasi(res.data.data);
+    } catch (error) {
+      console.log('Error fetching data:', error);
+    }
+  }
   useEffect(() => {
     getEskul();
+    getPrestasi();
   }, [])
   const aboutUsControls = useAnimation();
   const galeriControls = useAnimation();
@@ -64,20 +76,24 @@ const Home: React.FC = () => {
         }}
         transition={{ duration: 1.5 }}
       >
-        <AboutUs />
       </motion.div>
-
+      <Typography variant="h4" sx={{ fontWeight: "bold", color: "#79fa17", textAlign: "center", marginTop: "60px" }}>Prestasi SMP Islam Karya Mukti</Typography>
       <motion.div
-        ref={galeriRef}
+        ref={eskulRef}
+        className="flex justify-center items-center my-5 gap-5"
         initial="hidden"
-        animate={galeriControls}
+        
+        animate={eskulControls}
         variants={{
-          hidden: { opacity: 0, y: 100 },
-          visible: { opacity: 1, y: 0 },
+          hidden: { opacity: 0 },
+          visible: { opacity: 1 },
         }}
-        transition={{ duration: 1.5, delay: 0.5 }}
+        transition={{ duration: 1.5, delay: 1 }}
       >
-        {/* <Galeri /> */}
+
+        {prestasi.slice(0, 3).map((prestasi) => (
+          <Prestasicard key={prestasi.id} name={prestasi.name} Article={prestasi.Article} fotoPrestasi={`http://localhost:5001/uploads/${prestasi.fotoPrestasi}`} id={prestasi.id} />
+        ))}
       </motion.div>
 
       <motion.div
@@ -91,7 +107,7 @@ const Home: React.FC = () => {
         }}
         transition={{ duration: 1.5, delay: 1 }}
       >
-        <p className="font-bold text-[30px]">Ekstrakurikuler</p>
+        <p className="font-bold text-[30px]">Ekstrakurikuler Kami </p>
       </motion.div>
 
       <motion.div

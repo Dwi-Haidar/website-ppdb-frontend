@@ -51,10 +51,10 @@ const PpdbDataTable: React.FC = () => {
   }, []);
 
   const filteredData = ppdbData.filter((data) =>
-    data.nisn.toLowerCase().includes(searchnisn.toLowerCase())
+    data.nisn ? data.nisn.toLowerCase().includes(searchnisn.toLowerCase()) : false
   );
 
-  const currentItems = filteredData.slice(
+  const currentItems = ppdbData.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
@@ -68,44 +68,17 @@ const PpdbDataTable: React.FC = () => {
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="overflow-x-auto w-[96%] mb-4">
-        <Card
-          sx={{
-            width: "100%",
-            maxWidth: 400,
-            padding: 3,
-            boxShadow: 3,
-            borderRadius: 2,
-            mb: 4,
-          }}
-        >
-          <Typography variant="h6" mb={2}>
-            Cari Data Siswa Berdasarkan NISN
-          </Typography>
-          <TextField
-            label="Masukkan NISN"
-            variant="outlined"
-            size="small"
-            value={searchnisn}
-            onChange={(e) => setSearchnisn(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <IconButton edge="end" aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-              ),
-            }}
-            sx={{
-              width: "100%",
-              backgroundColor: "#f5f5f5",
-              borderRadius: 2,
-            }}
-          />
-        </Card>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Data Calon Siswa</Typography>
+        </Box>
         <table className="min-w-full bg-white shadow-md rounded-lg border border-black-200">
           <thead>
             <tr>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700 ">
                 Foto Murid
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700 ">
+                Foto Bukti
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
                 Nama Lengkap
@@ -156,10 +129,13 @@ const PpdbDataTable: React.FC = () => {
                 No. Telepon
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
-                Kelulusan
+                Status Murid
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
                 Status Pembayaran
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Status Pembayaran Form
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
                 Email
@@ -181,6 +157,13 @@ const PpdbDataTable: React.FC = () => {
                     />
                   </td>
 
+                  <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
+                    <img
+                      src={`http://localhost:5001/uploads/${data.fotoBukti}`}
+                      alt="foto"
+                      style={{ width: "30px", height: "30px" }}
+                    />
+                  </td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.nama}
                   </td>
@@ -226,18 +209,22 @@ const PpdbDataTable: React.FC = () => {
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.pekerjaanIbu}
                   </td>
+
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.noTelp}
                   </td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.Kelulusan
                       ? data.Kelulusan.statusKelulusan
-                        ? "Lulus"
-                        : "Tidak Lulus"
+                        ? "Diterima"
+                        : "Ditolak"
                       : "Belum Diproses"}
                   </td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.isPaid ? "Paid" : "Unpaid"}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.isVerified ? "sudah bayar" : "belum bayar"}
                   </td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.email}

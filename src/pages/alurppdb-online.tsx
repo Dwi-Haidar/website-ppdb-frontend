@@ -51,10 +51,12 @@ const steps = [
 ];
 
 const AlurppdbOnline = () => {
+
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [email, setEmail] = useState("");
   const [isVerified, setIsVerified] = useState<boolean>(false);
+  const isLoggedIn = localStorage.getItem("authToken") !== null;
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -82,7 +84,11 @@ const AlurppdbOnline = () => {
   }, []);
 
   const handleUploadClick = () => {
-    navigate("/payment-instructions");
+    if (isLoggedIn) {
+      navigate("/payment-instructions");
+    } else {
+      navigate("/login");
+    }
   };
   const handleIsiFolmulirClick = () => {
     navigate("/ppdbonline");
@@ -131,7 +137,7 @@ const AlurppdbOnline = () => {
                 color="primary"
                 onClick={handleUploadClick}
               >
-                Unggah Bukti Pembayaran
+                {isLoggedIn ? "Unggah Bukti Pembayaran" : "Tolong  Login Terlebih Dahulu"}
               </Button>
             </>
           ) : null}

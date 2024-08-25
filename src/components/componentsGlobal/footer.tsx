@@ -7,7 +7,7 @@ import LogoSekolah from "../../assets/image/logosekolah.png"
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-green-700 text-white py-12" style={{ fontFamily: "work sans" }} >
+    <footer className=" text-white py-12" style={{ fontFamily: "work sans", backgroundColor: "#56b475" }} >
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Informasi Sekolah */}

@@ -42,6 +42,7 @@ const Login: React.FC = () => {
       const { token } = data;
       localStorage.setItem("authToken", token);
       navigate("/admin");
+      
       localStorage.setItem("authToken", token);
       navigate("/");
     } catch (err) {

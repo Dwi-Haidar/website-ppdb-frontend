@@ -16,14 +16,15 @@ const CardEskul: React.FC<CardEskulProps> = ({ name, fotoEktra, Article }) => {
           <img
             className="rounded-t-xl h-[150px] md:h-[120px] w-full object-cover"
             src={fotoEktra}
+            style={{ objectFit: "cover", height: "200px" }}
             alt={name}
           />
           <Link to="#" className="font-bold hover:text-[#127521] text-[20px]">
             {name}
           </Link>
-          <Link to="#" className="hover:text-[#127521]">
+          {/* <Link to="#" className="hover:text-[#127521]">
             {Article}
-          </Link>
+          </Link> */}
         </div>
       </div>
     </Link>
