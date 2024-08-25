@@ -23,6 +23,7 @@ export interface Kelulusan {
 export interface PpdbData {
   id: number;
   nama: string;
+  tempat: string;
   nisn: string;
   ttl: string;
   nik: string;

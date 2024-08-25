@@ -76,9 +76,9 @@ const App = () => {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              
                 <LayoutsAdmin />
-              </ProtectedRoute>
+              
             }
           >
             <Route index element={<Dashboard />} />
