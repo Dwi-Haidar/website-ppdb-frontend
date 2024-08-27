@@ -50,11 +50,13 @@ interface PpdbData {
   pekerjaanIbu: string;
   noTelp: string;
   isPaid: boolean;
+  email: string;
   fotoBukti: string;
   fotoKK: string;
   fotoSKL: string;
   fotoIjazah: string;
   fotoAkta: string;
+  link: string;
   createdAt: string;
   updatedAt: string;
   image: IPpdbImage[];
@@ -70,6 +72,14 @@ const EditKelulusan: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const numericId = id ? Number(id) : 0;
 
+  const postEmail = async (emailToPost: string, nama: string, link: string) => {
+    try {
+      const res = await API.post("sendEmailPembayaranFormulir", { email: emailToPost, nama: nama, link: link });
+      console.log("Email sent successfully:", res.data);
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  }
   const GetdetailKelulusan = async () => {
     try {
       const response = await API.get(`ppdb/${numericId}`);
@@ -233,6 +243,10 @@ const EditKelulusan: React.FC = () => {
                 </RadioGroup>
               </FormControl>
             </Box>
+            <Button
+              onClick={() => postEmail(data.email, data.nama, data.link)}>
+              kirim email verifikasi
+            </Button>
             <Button
               variant="contained"
               color="primary"
