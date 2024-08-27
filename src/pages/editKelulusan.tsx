@@ -21,6 +21,7 @@ import { blue } from "@mui/material/colors";
 import CloseIcon from '@mui/icons-material/Close';
 import { IPpdbImage } from "../types/types";
 import API from "../libs";
+import { toast } from "react-toastify";
 
 interface Kelulusan {
   id: number;
@@ -50,11 +51,13 @@ interface PpdbData {
   pekerjaanIbu: string;
   noTelp: string;
   isPaid: boolean;
+  email: string;
   fotoBukti: string;
   fotoKK: string;
   fotoSKL: string;
   fotoIjazah: string;
   fotoAkta: string;
+  link: string;
   createdAt: string;
   updatedAt: string;
   image: IPpdbImage[];
@@ -70,6 +73,15 @@ const EditKelulusan: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const numericId = id ? Number(id) : 0;
 
+  const postEmail = async (emailToPost: string, nama: string, link: string) => {
+    try {
+      const res = await API.post("sendEmailPembayaranFormulir", { email: emailToPost, nama: nama, link: link });
+      console.log("Email sent successfully:", res.data);
+      toast.success("Email sent successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  }
   const GetdetailKelulusan = async () => {
     try {
       const response = await API.get(`ppdb/${numericId}`);
@@ -173,6 +185,7 @@ const EditKelulusan: React.FC = () => {
                 </Grid>
               ))}
               <Grid item xs={12}>
+                <Box sx={{ borderBottom: "2px solid black", width: "100%", marginBottom: "16px", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" }}></Box>
                 <Typography variant="body1" color="textSecondary" sx={{ fontWeight: 600 }}>
                   Foto Bukti Pembayaran:
                 </Typography>
@@ -233,6 +246,7 @@ const EditKelulusan: React.FC = () => {
                 </RadioGroup>
               </FormControl>
             </Box>
+
             <Button
               variant="contained"
               color="primary"
@@ -240,6 +254,11 @@ const EditKelulusan: React.FC = () => {
               sx={{ mt: 3 }}
             >
               Simpan
+            </Button>
+            <Button
+              sx={{ width: "100%", mt: 3, borderRadius: 2 }} color="primary"
+              onClick={() => postEmail(data.email, data.nama, data.link)}>
+              kirim email verifikasi
             </Button>
           </CardContent>
         </Card>

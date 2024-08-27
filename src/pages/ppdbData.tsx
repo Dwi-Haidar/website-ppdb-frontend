@@ -138,7 +138,7 @@ const PpdbDataTable: React.FC = () => {
                 Status Pembayaran
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
-                Status Pembayaran Form
+                Status Pembayaran Formulir Pendaftaran
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
                 Email
@@ -153,19 +153,25 @@ const PpdbDataTable: React.FC = () => {
               currentItems.map((data) => (
                 <tr key={data.id}>
                   <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
-                    <img
-                      src={`http://localhost:5001/uploads/${data.fotoMurid}`}
-                      alt="foto"
-                      style={{ width: "30px", height: "30px" }}
-                    />
+                    {data.fotoMurid ? (
+                      <img
+                        src={`http://localhost:5001/uploads/${data.fotoMurid}`}
+                        alt="foto"
+                        style={{ width: "30px", height: "30px" }}
+                      />
+                    ) : null}
+
                   </td>
 
                   <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
-                    <img
-                      src={`http://localhost:5001/uploads/${data.fotoBukti}`}
-                      alt="foto"
-                      style={{ width: "30px", height: "30px" }}
-                    />
+                    {data.fotoBukti ? (
+                      <img
+                        src={`http://localhost:5001/uploads/${data.fotoBukti} `}
+                        alt="foto"
+                        style={{ width: "30px", height: "30px" }}
+                      />
+                    ) : null}
+
                   </td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.nama}
