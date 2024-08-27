@@ -51,6 +51,7 @@ interface PpdbData {
   pekerjaanIbu: string;
   noTelp: string;
   isPaid: boolean;
+
   email: string;
   fotoBukti: string;
   fotoKK: string;
@@ -82,7 +83,7 @@ const EditKelulusan: React.FC = () => {
         nama: nama,
         link: link,
       });
-      console.log("Email sent successfully:", res.data);
+
       toast.success("Email sent successfully");
     } catch (error) {
       console.error("Error sending email:", error);
@@ -94,7 +95,7 @@ const EditKelulusan: React.FC = () => {
         email: emailToPost,
         nama: nama,
       });
-      console.log("Email sent successfully:", res.data);
+
       toast.success("Email sent successfully");
     } catch (error) {
       console.error("Error sending email:", error);
@@ -106,6 +107,7 @@ const EditKelulusan: React.FC = () => {
       setData(response.data.data);
       setIsVerified(response.data.data.isVerified);
       setIsValid(response.data.data.isDataValid);
+      console.log(setIsValid, 'ini apa');
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -143,6 +145,7 @@ const EditKelulusan: React.FC = () => {
         await API.put(`ppdb/${numericId}`, {
           isDataValid,
         });
+        toast.success("Data updated successfully");
       } catch (error) {
         console.log(error);
       }
@@ -156,6 +159,7 @@ const EditKelulusan: React.FC = () => {
         ppdbId: numericId,
         statusKelulusan: kelulusan,
       });
+      toast.success("Data updated successfully");
 
       await updatePpdb();
       GetdetailKelulusan();
@@ -313,7 +317,7 @@ const EditKelulusan: React.FC = () => {
                 </RadioGroup>
               </FormControl>
               <Typography variant="h6" gutterBottom>
-                Validasi Data
+                Validasi Formulir
               </Typography>
               <FormControl component="fieldset">
                 <RadioGroup
@@ -369,6 +373,7 @@ const EditKelulusan: React.FC = () => {
             >
               Simpan
             </Button>
+            <Box sx={{ borderBottom: "1.5px solid black", width: "100%", mt: 3, boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" }}></Box>
             <Button
               sx={{ width: "100%", mt: 3, borderRadius: 2 }}
               color="primary"

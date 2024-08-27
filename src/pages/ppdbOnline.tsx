@@ -105,9 +105,16 @@ const PpdbOnline = () => {
 
   // Validate the form before submission
   const validateForm = () => {
-    const { nisn, nik, noKK } = formData;
+    const { nisn, nik, noKK, ttl } = formData;
     if (nisn.length !== 10) {
       toast.error("NISN harus terdiri dari 10 angka.");
+      return false;
+    }
+    const ttlDate = new Date(ttl);
+    const minDate = new Date("2012-01-01");
+
+    if (ttlDate < minDate) {
+      toast.error("Tanggal lahir harus setelah Januari 2012.");
       return false;
     }
     if (nik.length !== 16) {
@@ -651,32 +658,6 @@ const PpdbOnline = () => {
             />
           </div>
           <div style={{ width: "100%" }}></div>
-        </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
-              Foto Murid
-            </label>
-            <input
-              type="file"
-              name="fotoMurid"
-              onChange={handleFileChange}
-              multiple
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-            />
-          </div>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
-              Foto KK
-            </label>
-            <input
-              type="file"
-              name="fotoKK"
-              onChange={handleFileChange}
-              multiple
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-            />
-          </div>
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
