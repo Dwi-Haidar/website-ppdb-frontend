@@ -18,7 +18,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { IPpdbImage } from "../types/types";
 import API from "../libs";
 import { toast } from "react-toastify";
@@ -62,6 +62,7 @@ interface PpdbData {
   updatedAt: string;
   image: IPpdbImage[];
   Kelulusan?: Kelulusan;
+  isDataValid?: boolean;
 }
 
 const EditKelulusan: React.FC = () => {
@@ -69,24 +70,42 @@ const EditKelulusan: React.FC = () => {
   const [kelulusan, setKelulusan] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [isDataValid, setIsValid] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
   const numericId = id ? Number(id) : 0;
 
   const postEmail = async (emailToPost: string, nama: string, link: string) => {
     try {
-      const res = await API.post("sendEmailPembayaranFormulir", { email: emailToPost, nama: nama, link: link });
+      const res = await API.post("sendEmailPembayaranFormulir", {
+        email: emailToPost,
+        nama: nama,
+        link: link,
+      });
       console.log("Email sent successfully:", res.data);
       toast.success("Email sent successfully");
     } catch (error) {
       console.error("Error sending email:", error);
     }
-  }
+  };
+  const postEmailValidasiData = async (emailToPost: string, nama: string) => {
+    try {
+      const res = await API.post("sendEmailMelakukanPembayaran", {
+        email: emailToPost,
+        nama: nama,
+      });
+      console.log("Email sent successfully:", res.data);
+      toast.success("Email sent successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
   const GetdetailKelulusan = async () => {
     try {
       const response = await API.get(`ppdb/${numericId}`);
       setData(response.data.data);
       setIsVerified(response.data.data.isVerified);
+      setIsValid(response.data.data.isDataValid);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -103,14 +122,30 @@ const EditKelulusan: React.FC = () => {
   const handleVerifiedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsVerified(event.target.value === "true");
   };
+  const handleDataVerifiedChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setIsValid(event.target.value === "true");
+  };
 
   const updatePpdb = async () => {
-    try {
-      await API.put(`ppdb/${numericId}`, {
-        isVerified,
-      });
-    } catch (error) {
-      console.log(error);
+    if (isVerified) {
+      try {
+        await API.put(`ppdb/${numericId}`, {
+          isVerified,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (isDataValid) {
+      try {
+        await API.put(`ppdb/${numericId}`, {
+          isDataValid,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -154,7 +189,12 @@ const EditKelulusan: React.FC = () => {
             subheader={`NISN: ${data.nisn}`}
             titleTypographyProps={{ variant: "h6" }}
             subheaderTypographyProps={{ variant: "body2" }}
-            sx={{ backgroundColor: "#56b475", color: "white", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+            sx={{
+              backgroundColor: "#56b475",
+              color: "white",
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+            }}
           />
           <CardContent>
             <Typography variant="h5" gutterBottom>
@@ -178,21 +218,41 @@ const EditKelulusan: React.FC = () => {
                 { label: "No Telp", value: data.noTelp },
               ].map((item, index) => (
                 <Grid item xs={12} md={6} key={index}>
-                  <Typography variant="body1" color="textSecondary" sx={{ fontWeight: 600 }}>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    sx={{ fontWeight: 600 }}
+                  >
                     {item.label}:
                   </Typography>
                   <Typography variant="body2">{item.value}</Typography>
                 </Grid>
               ))}
               <Grid item xs={12}>
-                <Box sx={{ borderBottom: "2px solid black", width: "100%", marginBottom: "16px", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" }}></Box>
-                <Typography variant="body1" color="textSecondary" sx={{ fontWeight: 600 }}>
+                <Box
+                  sx={{
+                    borderBottom: "2px solid black",
+                    width: "100%",
+                    marginBottom: "16px",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                  }}
+                ></Box>
+                <Typography
+                  variant="body1"
+                  color="textSecondary"
+                  sx={{ fontWeight: 600 }}
+                >
                   Foto Bukti Pembayaran:
                 </Typography>
                 <img
                   src={`http://localhost:5001/uploads/${data.fotoBukti}`}
                   alt="Foto Bukti Pembayaran"
-                  style={{ width: "150px", height: "auto", borderRadius: "8px", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" }}
+                  style={{
+                    width: "150px",
+                    height: "auto",
+                    borderRadius: "8px",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                  }}
                 />
               </Grid>
               {[
@@ -202,34 +262,29 @@ const EditKelulusan: React.FC = () => {
                 { label: "Akta", value: data.fotoAkta },
               ].map((item, index) => (
                 <Grid item xs={12} md={6} key={index}>
-                  <Typography variant="body1" color="textSecondary" sx={{ fontWeight: 600 }}>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    sx={{ fontWeight: 600 }}
+                  >
                     Foto {item.label}:
                   </Typography>
                   <img
                     src={`http://localhost:5001/uploads/${item.value}`}
                     alt={`Foto ${item.label}`}
-                    style={{ width: "150px", height: "auto", borderRadius: "8px", cursor: "pointer", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" }}
+                    style={{
+                      width: "150px",
+                      height: "auto",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                    }}
                     onClick={() => handleImageClick(item.value)}
                   />
                 </Grid>
               ))}
             </Grid>
             <Box mt={3}>
-              <Typography variant="h6" gutterBottom>
-                Status Murid
-              </Typography>
-              <FormControl component="fieldset">
-                <RadioGroup
-                  row
-                  aria-label="status"
-                  name="statusKelulusan"
-                  value={kelulusan ? "true" : "false"}
-                  onChange={handleRadioChange}
-                >
-                  <FormControlLabel value="true" control={<Radio />} label="Diterima" />
-                  <FormControlLabel value="false" control={<Radio />} label="Tidak  Diterima" />
-                </RadioGroup>
-              </FormControl>
               <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
                 Status Pembayaran
               </Typography>
@@ -241,8 +296,63 @@ const EditKelulusan: React.FC = () => {
                   value={isVerified ? "true" : "false"}
                   onChange={handleVerifiedChange}
                 >
-                  <FormControlLabel value="true" control={<Radio />} label="Sudah Bayar" />
-                  <FormControlLabel value="false" control={<Radio />} label="Belum Bayar" />
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio />}
+                    label="Sudah Bayar"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio />}
+                    label="Belum Bayar"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <Typography variant="h6" gutterBottom>
+                Validasi Data
+              </Typography>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  row
+                  aria-label="status"
+                  name="isDataValid"
+                  value={isDataValid ? "true" : "false"}
+                  onChange={handleDataVerifiedChange}
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio />}
+                    label="Diterima"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio />}
+                    label="Tidak  Diterima"
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              <Typography variant="h6" gutterBottom>
+                Status Murid
+              </Typography>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  row
+                  aria-label="status"
+                  name="statusKelulusan"
+                  value={kelulusan ? "true" : "false"}
+                  onChange={handleRadioChange}
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio />}
+                    label="Diterima"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio />}
+                    label="Tidak  Diterima"
+                  />
                 </RadioGroup>
               </FormControl>
             </Box>
@@ -256,9 +366,18 @@ const EditKelulusan: React.FC = () => {
               Simpan
             </Button>
             <Button
-              sx={{ width: "100%", mt: 3, borderRadius: 2 }} color="primary"
-              onClick={() => postEmail(data.email, data.nama, data.link)}>
+              sx={{ width: "100%", mt: 3, borderRadius: 2 }}
+              color="primary"
+              onClick={() => postEmail(data.email, data.nama, data.link)}
+            >
               kirim email verifikasi
+            </Button>
+            <Button
+              sx={{ width: "100%", mt: 3, borderRadius: 2 }}
+              color="primary"
+              onClick={() => postEmailValidasiData(data.email, data.nama)}
+            >
+              kirim email validasi Data telah benar
             </Button>
           </CardContent>
         </Card>

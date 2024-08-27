@@ -4,10 +4,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "./alurppdb-online";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { addYears, isBefore } from 'date-fns';
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { addYears, isBefore } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 // Define the interface for form data
 interface FormData {
@@ -33,6 +33,8 @@ interface FormData {
 // Define the interface for JWT payload
 
 const PpdbOnline = () => {
+  const navigate = useNavigate();
+
   const [startDate, setStartDate] = useState(null);
   const inputStyles = {
     width: "100%",
@@ -74,7 +76,9 @@ const PpdbOnline = () => {
   });
 
   // Handle input changes for form fields
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -175,7 +179,6 @@ const PpdbOnline = () => {
     });
 
     try {
-      console.log(data, 'tes');
       const response = await axios.post("http://localhost:5001/ppdb", data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -185,26 +188,9 @@ const PpdbOnline = () => {
 
       if (response.data.status) {
         toast.success("Data berhasil dikirim.");
-        const token = response.data.data.transactionToken;
-        (window as any).snap.pay(token, {
-          onSuccess: function (result: any) {
-            alert("Payment success!");
-            console.log(result);
-          },
-          onPending: function (result: any) {
-            alert("Waiting your payment!");
-            console.log(result);
-          },
-          onError: function (result: any) {
-            alert("Payment failed!");
-            console.log(result);
-          },
-          onClose: function () {
-            alert("You closed the popup without finishing the payment.");
-          },
-        });
-        console.log(response.data.data);
+        navigate("/waiting-for-verification");
 
+        console.log(response.data.data);
       } else {
         handleValidationError(response.data.message);
       }
@@ -225,59 +211,28 @@ const PpdbOnline = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl mt-16">
-      <h1 className="text-3xl font-bold mb-6 text-center">Pendaftaran Online</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Pendaftaran Online
+      </h1>
       <form onSubmit={handleSubmit} noValidate>
-        <div style={{ display: "flex", gap: "10px", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            justifyContent: "space-between",
+          }}
+        >
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Nama</label>
-            <input type="text" name="nama" value={formData.nama} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
-          </div>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">NISN</label>
-            <input type="text" name="nisn" value={formData.nisn} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Tempat Lahir</label>
-            <input type="text" name="tempat" value={formData.tempat} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
-          </div>
-          <div style={{ width: "100%" }}  >
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Tanggal Lahir</label>
-            <input type="date" name="ttl" value={formData.ttl} onChange={handleInputChange}
-              max={new Date().toISOString().split("T")[0]}
-              min="2012-01-01"
-              required style={{
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Nama
+            </label>
+            <input
+              type="text"
+              name="nama"
+              value={formData.nama}
+              onChange={handleInputChange}
+              required
+              style={{
                 width: "100%",
                 border: "1px solid #ccc",
                 padding: "12px 15px",
@@ -286,87 +241,208 @@ const PpdbOnline = () => {
                 fontSize: "16px",
                 transition: "border-color 0.3s, box-shadow 0.3s",
               }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              NISN
+            </label>
+            <input
+              type="text"
+              name="nisn"
+              value={formData.nisn}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">NIK</label>
-            <input type="text" name="nik" value={formData.nik} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tempat Lahir
+            </label>
+            <input
+              type="text"
+              name="tempat"
+              value={formData.tempat}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">No. KK</label>
-            <input type="text" name="noKK" value={formData.noKK} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Alamat</label>
-            <input type="text" name="alamat" value={formData.alamat} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
-          </div>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Nama Ayah</label>
-            <input type="text" name="namaAyah" value={formData.namaAyah} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tanggal Lahir
+            </label>
+            <input
+              type="date"
+              name="ttl"
+              value={formData.ttl}
+              onChange={handleInputChange}
+              max={new Date().toISOString().split("T")[0]}
+              min="2012-01-01"
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Tahun Lahir Ayah</label>
-            <input type="text" name="tahunLahirAyah" value={formData.tahunLahirAyah} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              NIK
+            </label>
+            <input
+              type="text"
+              name="nik"
+              value={formData.nik}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Pendidikan Ayah</label>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              No. KK
+            </label>
+            <input
+              type="text"
+              name="noKK"
+              value={formData.noKK}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Alamat
+            </label>
+            <input
+              type="text"
+              name="alamat"
+              value={formData.alamat}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Nama Ayah
+            </label>
+            <input
+              type="text"
+              name="namaAyah"
+              value={formData.namaAyah}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tahun Lahir Ayah
+            </label>
+            <input
+              type="text"
+              name="tahunLahirAyah"
+              value={formData.tahunLahirAyah}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Pendidikan Ayah
+            </label>
             <select
               id="pendidikanAyah"
               name="pendidikanAyah"
@@ -381,10 +457,10 @@ const PpdbOnline = () => {
                 fontSize: "16px",
                 transition: "border-color 0.3s, box-shadow 0.3s",
               }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
             >
-              <option value=""> ---  Pendidikan Ayah ---</option>
+              <option value=""> --- Pendidikan Ayah ---</option>
               <option value="SD">SD</option>
               <option value="SMP">SMP</option>
               <option value="SMA">SMA</option>
@@ -395,51 +471,80 @@ const PpdbOnline = () => {
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Pekerjaan Ayah</label>
-            <input type="text" name="pekerjaanAyah" value={formData.pekerjaanAyah} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Pekerjaan Ayah
+            </label>
+            <input
+              type="text"
+              name="pekerjaanAyah"
+              value={formData.pekerjaanAyah}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Nama Ibu</label>
-            <input type="text" name="namaIbu" value={formData.namaIbu} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Nama Ibu
+            </label>
+            <input
+              type="text"
+              name="namaIbu"
+              value={formData.namaIbu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Tahun Lahir Ibu</label>
-            <input type="text" name="tahunLahirIbu" value={formData.tahunLahirIbu} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tahun Lahir Ibu
+            </label>
+            <input
+              type="text"
+              name="tahunLahirIbu"
+              value={formData.tahunLahirIbu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Pendidikan Ibu</label>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Pendidikan Ibu
+            </label>
             <select
               id="pendidikanIbu"
               name="pendidikanIbu"
@@ -454,10 +559,10 @@ const PpdbOnline = () => {
                 fontSize: "16px",
                 transition: "border-color 0.3s, box-shadow 0.3s",
               }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
             >
-              <option value=""> ---  Pendidikan Ibu ---</option>
+              <option value=""> --- Pendidikan Ibu ---</option>
               <option value="SD">SD</option>
               <option value="SMP">SMP</option>
               <option value="SMA">SMA</option>
@@ -468,80 +573,151 @@ const PpdbOnline = () => {
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Pekerjaan Ibu</label>
-            <input type="text" name="pekerjaanIbu" value={formData.pekerjaanIbu} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Pekerjaan Ibu
+            </label>
+            <input
+              type="text"
+              name="pekerjaanIbu"
+              value={formData.pekerjaanIbu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Alamat Orang Tua</label>
-            <input type="text" name="alamatOrtu" value={formData.alamatOrtu} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
-
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Alamat Orang Tua
+            </label>
+            <input
+              type="text"
+              name="alamatOrtu"
+              value={formData.alamatOrtu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
           </div>
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">No. Telepon</label>
-            <input type="text" name="noTelp" value={formData.noTelp} onChange={handleInputChange} required style={{
-              width: "100%",
-              border: "1px solid #ccc",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              fontSize: "16px",
-              transition: "border-color 0.3s, box-shadow 0.3s",
-            }}
-              onFocus={(e) => e.target.style.borderColor = "#007bff"}
-              onBlur={(e) => e.target.style.borderColor = "#ccc"} />
-
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              No. Telepon
+            </label>
+            <input
+              type="text"
+              name="noTelp"
+              value={formData.noTelp}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}></div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto Murid
+            </label>
+            <input
+              type="file"
+              name="fotoMurid"
+              onChange={handleFileChange}
+              multiple
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
           </div>
           <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto KK
+            </label>
+            <input
+              type="file"
+              name="fotoKK"
+              onChange={handleFileChange}
+              multiple
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
           </div>
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Foto Murid</label>
-            <input type="file" name="fotoMurid" onChange={handleFileChange} multiple className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto SKL
+            </label>
+            <input
+              type="file"
+              name="fotoSKL"
+              onChange={handleFileChange}
+              multiple
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
           </div>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Foto KK</label>
-            <input type="file" name="fotoKK" onChange={handleFileChange} multiple className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto Ijazah
+            </label>
+            <input
+              type="file"
+              name="fotoIjazah"
+              onChange={handleFileChange}
+              multiple
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
           </div>
         </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Foto SKL</label>
-            <input type="file" name="fotoSKL" onChange={handleFileChange} multiple className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
-          </div>
-          <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Foto Ijazah</label>
-            <input type="file" name="fotoIjazah" onChange={handleFileChange} multiple className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
-          </div>
-        </div>
-        <label className="block mb-1 mt-4 text-gray-800 font-semibold text-sm capitalize">Foto Akta</label>
-        <input type="file" name="fotoAkta" onChange={handleFileChange} multiple className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+        <label className="block mb-1 mt-4 text-gray-800 font-semibold text-sm capitalize">
+          Foto Akta
+        </label>
+        <input
+          type="file"
+          name="fotoAkta"
+          onChange={handleFileChange}
+          multiple
+          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+        />
 
         <button
           type="submit"
-          style={{ width: "100%", marginTop: "10px", padding: "10px 10px", borderRadius: "8px", color: "white", background: "linear-gradient(180deg, #0f6fff 0%, #0062e6 100%)" }}
+          style={{
+            width: "100%",
+            marginTop: "10px",
+            padding: "10px 10px",
+            borderRadius: "8px",
+            color: "white",
+            background: "linear-gradient(180deg, #0f6fff 0%, #0062e6 100%)",
+          }}
         >
           Kirim
         </button>
