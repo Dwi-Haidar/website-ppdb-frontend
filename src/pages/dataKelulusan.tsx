@@ -82,11 +82,14 @@ const DataKelulusan: React.FC = () => {
                             currentItems.map((data) => (
                                 <tr key={data.id}>
                                     <td className="py-3 px-4 border-b text-sm text-gray-700">
-                                        <img
-                                            src={`http://localhost:5001/uploads/${data.ppdb.fotoMurid}`}
-                                            alt="foto"
-                                            style={{ width: "30px", height: "30px" }}
-                                        />
+                                        {data.ppdb.fotoMurid ? (
+                                            <img
+                                                src={`http://localhost:5001/uploads/${data.ppdb.fotoMurid}`}
+                                                alt="foto"
+                                                style={{ width: "30px", height: "30px" }}
+                                            />
+                                        ) : null}
+
                                     </td>
                                     <td className="py-3 px-4 border-b text-sm text-gray-700">
                                         {data.ppdb.nisn}

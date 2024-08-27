@@ -191,11 +191,14 @@ const DataPrestasi: React.FC = () => {
                         {currentItems.map((data) => (
                             <tr key={data.id}>
                                 <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
-                                    <img
-                                        src={`http://localhost:5001/uploads/${data.fotoPrestasi}`}
-                                        alt="gambar"
-                                        style={{ width: "50px", height: "50px" }}
-                                    />
+                                    {data.fotoPrestasi ? (
+                                        <img
+                                            src={`http://localhost:5001/uploads/${data.fotoPrestasi}`}
+                                            alt="gambar"
+                                            style={{ width: "50px", height: "50px" }}
+                                        />
+                                    ) : null}
+
                                 </td>
                                 <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
                                     {data.name}
