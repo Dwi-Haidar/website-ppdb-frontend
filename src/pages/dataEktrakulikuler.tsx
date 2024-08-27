@@ -232,11 +232,14 @@ const DataEktrakulikuler: React.FC = () => {
                         {currentItems.map((data) => (
                             <tr key={data.id}>
                                 <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
-                                    <img
-                                        src={`http://localhost:5001/uploads/${data.fotoEktra}`}
-                                        alt="gambar"
-                                        style={{ width: "50px", height: "50px" }}
-                                    />
+                                    {data.fotoEktra ? (
+                                        <img
+                                            src={`http://localhost:5001/uploads/${data.fotoEktra}`}
+                                            alt="gambar"
+                                            style={{ width: "50px", height: "50px" }}
+                                        />
+                                    ) : null}
+
                                 </td>
                                 <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
                                     {data.name}

@@ -244,16 +244,18 @@ const EditKelulusan: React.FC = () => {
                 >
                   Foto Bukti Pembayaran:
                 </Typography>
-                <img
-                  src={`http://localhost:5001/uploads/${data.fotoBukti}`}
-                  alt="Foto Bukti Pembayaran"
-                  style={{
-                    width: "150px",
-                    height: "auto",
-                    borderRadius: "8px",
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                  }}
-                />
+                {data.fotoBukti ? (
+                  <img
+                    src={`http://localhost:5001/uploads/${data.fotoBukti}`}
+                    alt="Foto Bukti Pembayaran"
+                    style={{
+                      width: "150px",
+                      height: "auto",
+                      borderRadius: "8px",
+                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                    }}
+                  />
+                ) : null}
               </Grid>
               {[
                 { label: "KK", value: data.fotoKK },
@@ -269,18 +271,20 @@ const EditKelulusan: React.FC = () => {
                   >
                     Foto {item.label}:
                   </Typography>
-                  <img
-                    src={`http://localhost:5001/uploads/${item.value}`}
-                    alt={`Foto ${item.label}`}
-                    style={{
-                      width: "150px",
-                      height: "auto",
-                      borderRadius: "8px",
-                      cursor: "pointer",
-                      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                    }}
-                    onClick={() => handleImageClick(item.value)}
-                  />
+                  {item.value ? (
+                    <img
+                      src={`http://localhost:5001/uploads/${item.value}`}
+                      alt={`Foto ${item.label}`}
+                      style={{
+                        width: "150px",
+                        height: "auto",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                      }}
+                      onClick={() => handleImageClick(item.value)}
+                    />
+                  ) : null}
                 </Grid>
               ))}
             </Grid>

@@ -7,7 +7,7 @@ import { CustomJwtPayload } from "./alurppdb-online";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addYears, isBefore } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { FaCloudUploadAlt, FaFileUpload, FaUpload } from "react-icons/fa";
 
 // Define the interface for form data
 interface FormData {
@@ -36,6 +36,8 @@ const PpdbOnline = () => {
   const navigate = useNavigate();
 
   const [startDate, setStartDate] = useState(null);
+  const [fileNames, setFileNames] = useState<{ [key: string]: string }>({});
+
   const inputStyles = {
     width: "100%",
     border: "1px solid #ccc",
@@ -92,6 +94,10 @@ const PpdbOnline = () => {
       setImages((prev) => ({
         ...prev,
         [name]: Array.from(files),
+      }));
+      setFileNames((prev) => ({
+        ...prev,
+        [name]: files[0].name, // Only showing the first file name
       }));
     }
   };
@@ -674,40 +680,163 @@ const PpdbOnline = () => {
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
             <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto Murid
+            </label>
+            <div className="relative">
+              <input
+                type="file"
+                name="fotoMurid"
+                onChange={handleFileChange}
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoMurid
+                  ? fileNames.fotoMurid
+                  : "Masukan foto format jpg"}
+              </div>
+            </div>
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto KK
+            </label>
+            <div className="relative">
+              <input
+                type="file"
+                name="fotoKK"
+                onChange={handleFileChange}
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoKK
+                  ? fileNames.fotoKK
+                  : "Masukan foto format jpg"}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
               Foto SKL
             </label>
-            <input
-              type="file"
-              name="fotoSKL"
-              onChange={handleFileChange}
-              multiple
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-            />
+            <div className="relative">
+              <input
+                type="file"
+                name="fotoSKL"
+                onChange={handleFileChange}
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoSKL
+                  ? fileNames.fotoSKL
+                  : "Masukan foto format jpg"}
+              </div>
+            </div>
           </div>
           <div style={{ width: "100%" }}>
             <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
               Foto Ijazah
             </label>
-            <input
-              type="file"
-              name="fotoIjazah"
-              onChange={handleFileChange}
-              multiple
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-            />
+            <div className="relative">
+              <input
+                type="file"
+                name="fotoIjazah"
+                onChange={handleFileChange}
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoIjazah
+                  ? fileNames.fotoIjazah
+                  : "Masukan foto format jpg"}
+              </div>
+            </div>
           </div>
         </div>
+
         <label className="block mb-1 mt-4 text-gray-800 font-semibold text-sm capitalize">
           Foto Akta
         </label>
-        <input
-          type="file"
-          name="fotoAkta"
-          onChange={handleFileChange}
-          multiple
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-        />
+        <div className="relative">
+          <input
+            type="file"
+            name="fotoAkta"
+            onChange={handleFileChange}
+            multiple
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          />
 
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              marginTop: "5px",
+              border: "1px solid #ccc",
+              width: "50%",
+              alignItems: "center",
+              padding: "10px",
+              borderRadius: "8px",
+            }}
+          >
+            <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+            {fileNames.fotoAkta
+              ? fileNames.fotoAkta
+              : "Masukan foto format jpg"}
+          </div>
+        </div>
         <button
           type="submit"
           style={{

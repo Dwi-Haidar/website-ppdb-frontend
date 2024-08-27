@@ -97,13 +97,16 @@ const PrestasiPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Cardprestasi
-                  name={item.name}
-                  fotoPrestasi={`http://localhost:5001/uploads/${item.fotoPrestasi}`}
-                  Article={item.Article}
-                  createdAt={item.createdAt}
-                  id={item.id}
-                />
+                {item.fotoPrestasi ? (
+                  <Cardprestasi
+                    name={item.name}
+                    fotoPrestasi={`http://localhost:5001/uploads/${item.fotoPrestasi}`}
+                    Article={item.Article}
+                    createdAt={item.createdAt}
+                    id={item.id}
+                  />
+                ) : null}
+
               </motion.div>
             ))}
           </Box>
