@@ -259,7 +259,7 @@ const PpdbOnline = () => {
         </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
           <div style={{ width: "100%" }}>
-            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Tempat</label>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">Tempat Lahir</label>
             <input type="text" name="tempat" value={formData.tempat} onChange={handleInputChange} required style={{
               width: "100%",
               border: "1px solid #ccc",

@@ -94,13 +94,16 @@ const Berita = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                <CardBerita
-                                    name={item.name}
-                                    fotoBerita={`http://localhost:5001/uploads/${item.fotoBerita}`}
-                                    Article={item.Article}
-                                    createdAt={item.createdAt}
-                                    id={item.id}
-                                />
+                                {item.fotoBerita ? (
+                                    <CardBerita
+                                        name={item.name}
+                                        fotoBerita={`http://localhost:5001/uploads/${item.fotoBerita}`}
+                                        Article={item.Article}
+                                        createdAt={item.createdAt}
+                                        id={item.id}
+                                    />
+                                ) : null}
+
                             </motion.div>
                         ))}
                     </Box>
