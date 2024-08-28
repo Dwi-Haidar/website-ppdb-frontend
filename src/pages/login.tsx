@@ -2,8 +2,8 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 const dummyAdmin = {
-  email: "admin",
-  password: "admin123",
+  email: "admin@gmail.com",
+  password: "zero1755",
 };
 
 const Login: React.FC = () => {

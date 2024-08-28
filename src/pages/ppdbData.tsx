@@ -87,7 +87,10 @@ const PpdbDataTable: React.FC = () => {
                 NISN
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
-                Tempat, Tanggal Lahir
+                Tempat
+              </th>
+              <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
+                Tanggal Lahir
               </th>
               <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
                 NIK
@@ -169,6 +172,9 @@ const PpdbDataTable: React.FC = () => {
                   </td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.nisn}
+                  </td>
+                  <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
+                    {data.tempat}
                   </td>
                   <td className="py-1 px-4 border border-gray-400 text-sm text-gray-700">
                     {data.ttl}

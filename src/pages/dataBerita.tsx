@@ -204,7 +204,7 @@ const DataBerita: React.FC = () => {
                         onClick={handleOpenModal}
                         sx={{ borderRadius: 2, boxShadow: 2 }}
                     >
-                        Post ekstrakurikuler
+                        Post Berita
                     </Button>
                 </Box>
 
@@ -212,7 +212,7 @@ const DataBerita: React.FC = () => {
                     <thead>
                         <tr>
                             <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
-                                Gambar Ektrakulikuler
+                                Gambar Berita
                             </th>
                             <th className="py-1 px-4 bg-gray-100 border border-gray-400 text-left text-sm font-medium text-gray-700">
                                 Judul
