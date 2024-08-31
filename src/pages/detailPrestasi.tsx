@@ -68,31 +68,34 @@ const DetailPrestasi = () => {
         zIndex: -1
       }} />
       <Container sx={{ animation: `${fadeIn} 1s ease-in-out`, maxWidth: 'sm' }}>
-        <Card sx={{ 
-          boxShadow: 4, 
-          borderRadius: 3, 
-          margin: 'auto', 
+        <Card sx={{
+          boxShadow: 4,
+          borderRadius: 3,
+          margin: 'auto',
           position: 'relative',
           backgroundColor: 'rgba(255, 255, 255, 0.9)', // Background Card lebih cerah
-          padding: 2, 
+          padding: 2,
           overflow: 'hidden'
         }}>
-          <CardMedia
-            component="img"
-            image={`http://localhost:5001/uploads/${prestasi.fotoPrestasi}`}
-            alt={prestasi.name}
-            sx={{ 
-              maxWidth: '100%', 
-              height: 400, 
-              objectFit: 'cover',
-              borderTopLeftRadius: 12, 
-              borderTopRightRadius: 12,
-              transition: 'transform 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.05)'
-              }
-            }}
-          />
+          {prestasi.fotoPrestasi ? (
+            <CardMedia
+              component="img"
+              image={`http://localhost:5001/uploads/${prestasi.fotoPrestasi}`}
+              alt={prestasi.name}
+              sx={{
+                maxWidth: '100%',
+                height: 400,
+                objectFit: 'cover',
+                borderTopLeftRadius: 12,
+                borderTopRightRadius: 12,
+                transition: 'transform 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)'
+                }
+              }}
+            />
+          ) : null}
+
           <CardContent sx={{ textAlign: 'center', padding: 4 }}>
             <Typography variant="h5" sx={{ fontWeight: "bold", color: 'black', marginBottom: 2 }}>
               {prestasi.name}

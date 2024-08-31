@@ -24,6 +24,8 @@ import DataEktrakulikuler from "./pages/dataEktrakulikuler";
 import DetailPrestasi from "./pages/detailPrestasi";
 import DetailBerita from "./pages/detail-berita";
 import DataPrestasi from "./pages/data-prestasi";
+import WaitingForVerification from "./pages/waiting-for-verification ";
+import PaymentPage from "./pages/payment-page";
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("authToken");
@@ -57,9 +59,14 @@ const App = () => {
               element={<PaymentInstructions />}
             />
             <Route
+              path="/waiting-for-verification"
+              element={<WaitingForVerification />}
+            />
+            <Route
               path="/after-payment-instructions"
               element={<AfterPaymentInstructions />}
             />
+            <Route path="payment-page" element={<PaymentPage />} />
 
             <Route path="ppdb-offline" element={<PpdbOfline />} />
             <Route path="prestasi" element={<PrestasiPage />} />
@@ -73,14 +80,7 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           {/* Protected Routes */}
-          <Route
-            path="/admin"
-            element={
-              
-                <LayoutsAdmin />
-              
-            }
-          >
+          <Route path="/admin" element={<LayoutsAdmin />}>
             <Route index element={<Dashboard />} />
             <Route path="ppdb-data" element={<DataPpdb />} />
             <Route path="ppdb-kelulusan" element={<DataKelulusan />} />

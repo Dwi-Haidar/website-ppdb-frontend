@@ -26,10 +26,6 @@ const DataBerita: React.FC = () => {
     const [openModal, setOpenModal] = useState(false);
     const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
     const [selectedId, setSelectedId] = useState<number | null>(null);
-    // const [newData, setNewData] = useState({
-    //     name: "",
-    //     Article: "",
-    // });
     const [file, setFile] = useState<File | null>(null);
     const itemsPerPage = 5;
     const [editData, setEditData] = useState({
@@ -232,11 +228,14 @@ const DataBerita: React.FC = () => {
                         {currentItems.map((data) => (
                             <tr key={data.id}>
                                 <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
-                                    <img
-                                        src={`http://localhost:5001/uploads/${data.fotoBerita}`}
-                                        alt="gambar"
-                                        style={{ width: "50px", height: "50px" }}
-                                    />
+                                    {data.fotoBerita ? (
+                                        <img
+                                            src={`http://localhost:5001/uploads/${data.fotoBerita}`}
+                                            alt="gambar"
+                                            style={{ width: "50px", height: "50px" }}
+                                        />
+                                    ) : null}
+
                                 </td>
                                 <td className="py-1 px-4 border-b text-sm text-gray-700 border border-gray-400">
                                     {data.name}
@@ -272,17 +271,17 @@ const DataBerita: React.FC = () => {
                 </table>
                 <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
                     <ReactPaginate
-                       pageCount={Math.ceil(newsData.length / itemsPerPage)}
-                       onPageChange={handlePageClick}
-                       containerClassName="pagination flex justify-center"
-                       pageClassName="page-item"
-                       pageLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
-                       activeClassName="active"
-                       activeLinkClassName="bg-blue-500 text-white"
-                       previousClassName="previous-page"
-                       nextClassName="next-page"
-                       previousLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
-                       nextLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+                        pageCount={Math.ceil(newsData.length / itemsPerPage)}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination flex justify-center"
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+                        activeClassName="active"
+                        activeLinkClassName="bg-blue-500 text-white"
+                        previousClassName="previous-page"
+                        nextClassName="next-page"
+                        previousLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
+                        nextLinkClassName="page-link px-4 py-2 border border-gray-300 rounded-md"
                     />
                 </Box>
             </div>

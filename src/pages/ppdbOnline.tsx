@@ -4,7 +4,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "./alurppdb-online";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { addYears, isBefore } from "date-fns";
+import { FaCloudUploadAlt, FaFileUpload, FaUpload } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 // Define the interface for form data
 interface FormData {
@@ -30,6 +34,20 @@ interface FormData {
 // Define the interface for JWT payload
 
 const PpdbOnline = () => {
+  const navigate = useNavigate();
+
+  const [startDate, setStartDate] = useState(null);
+  const [fileNames, setFileNames] = useState<{ [key: string]: string }>({});
+
+  const inputStyles = {
+    width: "100%",
+    border: "1px solid #ccc",
+    padding: "12px 15px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    fontSize: "16px",
+    transition: "border-color 0.3s, box-shadow 0.3s",
+  };
   // Define the initial state for form data
   const [formData, setFormData] = useState<FormData>({
     nama: "",
@@ -61,7 +79,9 @@ const PpdbOnline = () => {
   });
 
   // Handle input changes for form fields
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -76,14 +96,25 @@ const PpdbOnline = () => {
         ...prev,
         [name]: Array.from(files),
       }));
+      setFileNames((prev) => ({
+        ...prev,
+        [name]: files[0].name, // Only showing the first file name
+      }));
     }
   };
 
   // Validate the form before submission
   const validateForm = () => {
-    const { nisn, nik, noKK } = formData;
+    const { nisn, nik, noKK, ttl } = formData;
     if (nisn.length !== 10) {
       toast.error("NISN harus terdiri dari 10 angka.");
+      return false;
+    }
+    const ttlDate = new Date(ttl);
+    const minDate = new Date("2012-01-01");
+
+    if (ttlDate < minDate) {
+      toast.error("Tanggal lahir harus setelah Januari 2012.");
       return false;
     }
     if (nik.length !== 16) {
@@ -162,7 +193,6 @@ const PpdbOnline = () => {
     });
 
     try {
-      console.log(data,'tes');
       const response = await axios.post("http://localhost:5001/ppdb", data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -172,26 +202,9 @@ const PpdbOnline = () => {
 
       if (response.data.status) {
         toast.success("Data berhasil dikirim.");
-        const token = response.data.data.transactionToken;
-        (window as any).snap.pay(token, {
-          onSuccess: function (result: any) {
-            alert("Payment success!");
-            console.log(result);
-          },
-          onPending: function (result: any) {
-            alert("Waiting your payment!");
-            console.log(result);
-          },
-          onError: function (result: any) {
-            alert("Payment failed!");
-            console.log(result);
-          },
-          onClose: function () {
-            alert("You closed the popup without finishing the payment.");
-          },
-        });
-        console.log(response.data.data);
+        navigate("/waiting-for-verification");
 
+        console.log(response.data.data);
       } else {
         handleValidationError(response.data.message);
       }
@@ -211,53 +224,237 @@ const PpdbOnline = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 w-[80%] mt-10">
-      <h1 className="text-2xl font-bold mb-6">Pendaftaran Online</h1>
+    <div className="container mx-auto px-4 py-8 max-w-4xl mt-16">
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Pendaftaran Online
+      </h1>
       <form onSubmit={handleSubmit} noValidate>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Input fields for the form */}
-          {[
-            { label: "Nama", name: "nama", type: "text" },
-            { label: "NISN", name: "nisn", type: "text" },
-            { label: "Tempat", name: "tempat", type: "text" },
-            { label: "Tanggal Lahir", name: "ttl", type: "date", min: "2012-01-01" },
-            { label: "NIK", name: "nik", type: "text" },
-            { label: "No KK", name: "noKK", type: "text" },
-            { label: "Alamat", name: "alamat", type: "text" },
-            { label: "Nama Ayah", name: "namaAyah", type: "text" },
-            { label: "Tahun Lahir Ayah", name: "tahunLahirAyah", type: "date" },
-            { label: "Pekerjaan Ayah", name: "pekerjaanAyah", type: "text" },
-            { label: "Nama Ibu", name: "namaIbu", type: "text" },
-            { label: "Tahun Lahir Ibu", name: "tahunLahirIbu", type: "date" },
-            { label: "Pekerjaan Ibu", name: "pekerjaanIbu", type: "text" },
-            { label: "Alamat Orang Tua", name: "alamatOrtu", type: "text" },
-            { label: "No Telepon", name: "noTelp", type: "text" },
-          ].map((field) => (
-            <div className="mb-4" key={field.name}>
-              <label
-                htmlFor={field.name}
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                {field.label}
-              </label>
-              <input
-                type={field.type}
-                id={field.name}
-                name={field.name}
-                value={formData[field.name as keyof FormData]}
-                onChange={handleInputChange}
-                autoComplete={field.name}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-          ))}
-
-          {/* Dropdown for pendidikanAyah */}
-          <div className="mb-4">
-            <label
-              htmlFor="pendidikanAyah"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Nama
+            </label>
+            <input
+              type="text"
+              name="nama"
+              value={formData.nama}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              NISN
+            </label>
+            <input
+              type="text"
+              name="nisn"
+              value={formData.nisn}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tempat Lahir
+            </label>
+            <input
+              type="text"
+              name="tempat"
+              value={formData.tempat}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tanggal Lahir
+            </label>
+            <input
+              type="date"
+              name="ttl"
+              value={formData.ttl}
+              onChange={handleInputChange}
+              max={new Date().toISOString().split("T")[0]}
+              min="2012-01-01"
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              NIK
+            </label>
+            <input
+              type="text"
+              name="nik"
+              value={formData.nik}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              No. KK
+            </label>
+            <input
+              type="text"
+              name="noKK"
+              value={formData.noKK}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Alamat
+            </label>
+            <input
+              type="text"
+              name="alamat"
+              value={formData.alamat}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Nama Ayah
+            </label>
+            <input
+              type="text"
+              name="namaAyah"
+              value={formData.namaAyah}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tahun Lahir Ayah
+            </label>
+            <input
+              type="date"
+              name="tahunLahirAyah"
+              value={formData.tahunLahirAyah}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
               Pendidikan Ayah
             </label>
             <select
@@ -265,9 +462,19 @@ const PpdbOnline = () => {
               name="pendidikanAyah"
               value={formData.pendidikanAyah}
               onChange={handleInputChange}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
             >
-              <option value="">Pilih Pendidikan Ayah</option>
+              <option value=""> --- Pendidikan Ayah ---</option>
               <option value="SD">SD</option>
               <option value="SMP">SMP</option>
               <option value="SMA">SMA</option>
@@ -275,13 +482,81 @@ const PpdbOnline = () => {
               <option value="Sarjana">Sarjana</option>
             </select>
           </div>
-
-          {/* Dropdown for pendidikanIbu */}
-          <div className="mb-4">
-            <label
-              htmlFor="pendidikanIbu"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Pekerjaan Ayah
+            </label>
+            <input
+              type="text"
+              name="pekerjaanAyah"
+              value={formData.pekerjaanAyah}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Nama Ibu
+            </label>
+            <input
+              type="text"
+              name="namaIbu"
+              value={formData.namaIbu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Tahun Lahir Ibu
+            </label>
+            <input
+              type="date"
+              name="tahunLahirIbu"
+              value={formData.tahunLahirIbu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
               Pendidikan Ibu
             </label>
             <select
@@ -289,9 +564,19 @@ const PpdbOnline = () => {
               name="pendidikanIbu"
               value={formData.pendidikanIbu}
               onChange={handleInputChange}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
             >
-              <option value="">Pilih Pendidikan Ibu</option>
+              <option value=""> --- Pendidikan Ibu ---</option>
               <option value="SD">SD</option>
               <option value="SMP">SMP</option>
               <option value="SMA">SMA</option>
@@ -299,43 +584,254 @@ const PpdbOnline = () => {
               <option value="Sarjana">Sarjana</option>
             </select>
           </div>
-
-
-          {/* File input fields */}
-          {[
-            { label: "Foto Murid", name: "fotoMurid" },
-            { label: "Foto KK", name: "fotoKK" },
-            { label: "Foto SKL", name: "fotoSKL" },
-            { label: "Foto Ijazah", name: "fotoIjazah" },
-            { label: "Foto Akta Kelahiran", name: "fotoAkta" },
-          ].map((fileField) => (
-            <div className="mb-4" key={fileField.name}>
-              <label
-                htmlFor={fileField.name}
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                {fileField.label}
-              </label>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Pekerjaan Ibu
+            </label>
+            <input
+              type="text"
+              name="pekerjaanIbu"
+              value={formData.pekerjaanIbu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Alamat Orang Tua
+            </label>
+            <input
+              type="text"
+              name="alamatOrtu"
+              value={formData.alamatOrtu}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              No. Telepon
+            </label>
+            <input
+              type="text"
+              name="noTelp"
+              value={formData.noTelp}
+              onChange={handleInputChange}
+              required
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                fontSize: "16px",
+                transition: "border-color 0.3s, box-shadow 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#007bff")}
+              onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            />
+          </div>
+          <div style={{ width: "100%" }}></div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto Murid
+            </label>
+            <div className="relative">
               <input
                 type="file"
-                id={fileField.name}
-                name={fileField.name}
+                name="fotoMurid"
                 onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoMurid
+                  ? fileNames.fotoMurid
+                  : "Masukan foto format jpg"}
+              </div>
             </div>
-          ))}
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto KK
+            </label>
+            <div className="relative">
+              <input
+                type="file"
+                name="fotoKK"
+                onChange={handleFileChange}
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoKK
+                  ? fileNames.fotoKK
+                  : "Masukan foto format jpg"}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto SKL
+            </label>
+            <div className="relative">
+              <input
+                type="file"
+                name="fotoSKL"
+                onChange={handleFileChange}
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoSKL
+                  ? fileNames.fotoSKL
+                  : "Masukan foto format jpg"}
+              </div>
+            </div>
+          </div>
+          <div style={{ width: "100%" }}>
+            <label className="block mb-1 text-gray-800 font-semibold text-sm capitalize">
+              Foto Ijazah
+            </label>
+            <div className="relative">
+              <input
+                type="file"
+                name="fotoIjazah"
+                onChange={handleFileChange}
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "5px",
+                  border: "1px solid #ccc",
+                  width: "100%",
+                  alignItems: "center",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+                {fileNames.fotoIjazah
+                  ? fileNames.fotoIjazah
+                  : "Masukan foto format jpg"}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex justify-end mt-6">
-          <button
-            type="submit"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        <label className="block mb-1 mt-4 text-gray-800 font-semibold text-sm capitalize">
+          Foto Akta
+        </label>
+        <div className="relative">
+          <input
+            type="file"
+            name="fotoAkta"
+            onChange={handleFileChange}
+            multiple
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          />
+
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              marginTop: "5px",
+              border: "1px solid #ccc",
+              width: "50%",
+              alignItems: "center",
+              padding: "10px",
+              borderRadius: "8px",
+            }}
           >
-            Submit
-          </button>
+            <FaCloudUploadAlt style={{ fontSize: "24px", color: "blue" }} />
+            {fileNames.fotoAkta
+              ? fileNames.fotoAkta
+              : "Masukan foto format jpg"}
+          </div>
         </div>
+        <button
+          type="submit"
+          style={{
+            width: "100%",
+            marginTop: "10px",
+            padding: "10px 10px",
+            borderRadius: "8px",
+            color: "white",
+            background: "linear-gradient(180deg, #0f6fff 0%, #0062e6 100%)",
+          }}
+        >
+          Kirim
+        </button>
       </form>
       <ToastContainer />
     </div>
